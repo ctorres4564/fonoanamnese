@@ -1,6 +1,6 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 
 const requiredEnvs = [
   'VITE_FIREBASE_API_KEY',
@@ -26,10 +26,15 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase only if it hasn't been initialized yet
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+if (import.meta.env.VITE_USE_FIREBASE_EMULATOR === 'true') {
+  connectAuthEmulator(auth, 'http://127.0.0.1:9099');
+  connectFirestoreEmulator(db, '127.0.0.1', 8080);
+}
+
+export { auth, db };
 
 export default app;
