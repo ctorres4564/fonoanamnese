@@ -68,3 +68,5 @@ export interface Guardian {
   createdAt?: string | Date;
   updatedAt?: string | Date;
 }
+
+export * from './anamnesis';

@@ -47,5 +47,19 @@ service cloud.firestore {
                     && resource.data.professionalId == request.auth.uid 
                     && request.resource.data.professionalId == request.auth.uid;
     }
+    match /anamneses/{anamnesisId} {
+      allow read: if request.auth != null && resource.data.professionalId == request.auth.uid;
+      allow create: if request.auth != null && request.resource.data.professionalId == request.auth.uid;
+      allow update: if request.auth != null 
+                    && resource.data.professionalId == request.auth.uid 
+                    && request.resource.data.professionalId == request.auth.uid
+                    && request.resource.data.patientId == resource.data.patientId;
+    }
+
+    match /anamnesisVersions/{versionId} {
+      allow read: if request.auth != null && resource.data.professionalId == request.auth.uid;
+      allow create: if request.auth != null && request.resource.data.professionalId == request.auth.uid;
+      allow update: if false; // Snapshots are immutable
+    }
   }
 }

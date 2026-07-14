@@ -10,6 +10,10 @@ import { PatientList } from './pages/patients/PatientList';
 import { PatientForm } from './pages/patients/PatientForm';
 import { PatientDetails } from './pages/patients/PatientDetails';
 import { Link } from 'react-router-dom';
+import AnamnesisList from './pages/anamnesis/AnamnesisList';
+import AnamnesisEditor from './pages/anamnesis/AnamnesisEditor';
+import AnamnesisReview from './pages/anamnesis/AnamnesisReview';
+import AnamnesisView from './pages/anamnesis/AnamnesisView';
 
 // Um dashboard simples provisório
 
@@ -92,6 +96,39 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <PatientDetails />
+              </ProtectedRoute>
+            } 
+          />
+
+          <Route 
+            path="/patients/:id/anamnesis" 
+            element={
+              <ProtectedRoute>
+                <AnamnesisList />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/patients/:id/anamnesis/:anamnesisId/edit" 
+            element={
+              <ProtectedRoute>
+                <AnamnesisEditor />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/patients/:id/anamnesis/:anamnesisId/review" 
+            element={
+              <ProtectedRoute>
+                <AnamnesisReview />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/patients/:id/anamnesis/:anamnesisId/view" 
+            element={
+              <ProtectedRoute>
+                <AnamnesisView />
               </ProtectedRoute>
             } 
           />

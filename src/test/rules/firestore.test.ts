@@ -245,6 +245,87 @@ describe('Guardians Security Rules', () => {
   });
 });
 
+describe('Anamneses Security Rules', () => {
+  it('usuário não autenticado não pode ler anamneses', async () => {
+    const unauthedDb = testEnv.unauthenticatedContext().firestore();
+    const docRef = doc(unauthedDb, 'anamneses', 'a1');
+    await assertFails(getDoc(docRef));
+  });
+
+  it('usuário autenticado pode criar anamnese vinculada ao seu professionalId', async () => {
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'anamneses', 'a1');
+    await assertSucceeds(setDoc(docRef, { professionalId: 'user123', patientId: 'p1' }));
+  });
+
+  it('usuário autenticado não pode criar anamnese vinculada a outro professionalId', async () => {
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'anamneses', 'a1');
+    await assertFails(setDoc(docRef, { professionalId: 'otherUser', patientId: 'p1' }));
+  });
+
+  it('usuário autenticado pode ler suas próprias anamneses', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'anamneses', 'a1'), { professionalId: 'user123' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'anamneses', 'a1');
+    await assertSucceeds(getDoc(docRef));
+  });
+
+  it('usuário autenticado não pode alterar professionalId ou patientId da anamnese', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'anamneses', 'a1'), { professionalId: 'user123', patientId: 'p1' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'anamneses', 'a1');
+    // Tentativa de alterar professionalId
+    await assertFails(updateDoc(docRef, { professionalId: 'otherUser' }));
+    // Tentativa de alterar patientId
+    await assertFails(updateDoc(docRef, { patientId: 'p2' }));
+  });
+
+  it('usuário autenticado pode atualizar sua própria anamnese mantendo ids originais', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'anamneses', 'a1'), { professionalId: 'user123', patientId: 'p1' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'anamneses', 'a1');
+    await assertSucceeds(updateDoc(docRef, { professionalId: 'user123', patientId: 'p1', isArchived: true }));
+  });
+
+  it('usuário autenticado não pode excluir fisicamente uma anamnese', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'anamneses', 'a1'), { professionalId: 'user123' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'anamneses', 'a1');
+    await assertFails(deleteDoc(docRef));
+  });
+});
+
+describe('Anamnesis Versions Security Rules', () => {
+  it('usuário autenticado pode criar versão vinculada ao seu professionalId', async () => {
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'anamnesisVersions', 'v1');
+    await assertSucceeds(setDoc(docRef, { professionalId: 'user123', patientId: 'p1' }));
+  });
+
+  it('usuário autenticado não pode atualizar versão de anamnese (imutável)', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'anamnesisVersions', 'v1'), { professionalId: 'user123', patientId: 'p1' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'anamnesisVersions', 'v1');
+    await assertFails(updateDoc(docRef, { professionalId: 'user123', patientId: 'p1', data: {} }));
+  });
+});
+
 describe('Default Access', () => {
   it('nenhuma leitura ou escrita em coleção não autorizada deve ser permitida', async () => {
     const authedDb = testEnv.authenticatedContext('user123').firestore();
