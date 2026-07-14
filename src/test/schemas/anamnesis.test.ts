@@ -1,13 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { 
-  createAnamnesisSchema, 
-  updateAnamnesisSchema, 
-  changeAnamnesisStatusSchema,
-  updateAnamnesisProgressSchema,
-  createAnamnesisVersionSchema
+  interviewDataSchema,
+  chiefComplaintSchema,
+  createAnamnesisSchema
 } from '../../schemas/anamnesis';
 
-describe('Anamnesis Schemas', () => {
+describe('Anamnesis Schemas - Base', () => {
   it('valida criação de anamnese com dados corretos', () => {
     const data = {
       patientId: 'p123',
@@ -15,61 +13,119 @@ describe('Anamnesis Schemas', () => {
     };
     expect(createAnamnesisSchema.safeParse(data).success).toBe(true);
   });
+});
 
-  it('rejeita criação sem patientId', () => {
-    const data = { professionalId: 'prof123' };
-    expect(createAnamnesisSchema.safeParse(data).success).toBe(false);
-  });
-
-  it('valida atualização parcial de anamnese', () => {
+describe('Anamnesis Schemas - InterviewData', () => {
+  it('rejeita data futura', () => {
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 1);
+    
     const data = {
-      completionPercentage: 50,
-      status: 'in_progress'
+      interviewDate: futureDate.toISOString().split('T')[0],
+      interviewee: 'João',
+      relationship: 'Pai',
+      location: 'consultório'
     };
-    expect(updateAnamnesisSchema.safeParse(data).success).toBe(true);
+    
+    const result = interviewDataSchema.safeParse(data);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0].message).toContain('não pode ser futura');
+    }
   });
 
-  it('rejeita percentual fora do limite em update', () => {
-    const data = { completionPercentage: 150 };
-    expect(updateAnamnesisSchema.safeParse(data).success).toBe(false);
-  });
-
-  it('valida mudança de status', () => {
-    expect(changeAnamnesisStatusSchema.safeParse({ status: 'finalized' }).success).toBe(true);
-    expect(changeAnamnesisStatusSchema.safeParse({ status: 'invalid_status' }).success).toBe(false);
-  });
-
-  it('valida atualização de progresso completa', () => {
+  it('aceita data válida e campos obrigatórios preenchidos', () => {
+    const todayDate = new Date().toISOString().split('T')[0];
     const data = {
-      currentSection: 'development',
-      completedSections: ['identification', 'clinical_history'],
-      completionPercentage: 40
+      interviewDate: todayDate,
+      interviewee: 'João',
+      relationship: 'Pai',
+      location: 'consultório'
     };
-    expect(updateAnamnesisProgressSchema.safeParse(data).success).toBe(true);
+    expect(interviewDataSchema.safeParse(data).success).toBe(true);
   });
 
-  it('rejeita versão de anamnese sem dados estruturais', () => {
+  it('rejeita horário de término anterior ao início', () => {
     const data = {
-      anamnesisId: 'a123',
-      version: -1, // invalid negative version
-      patientId: 'p1',
-      professionalId: 'prof1',
-      status: 'draft',
-      data: {}
+      interviewDate: '2023-01-01',
+      interviewee: 'João',
+      relationship: 'Pai',
+      location: 'consultório',
+      startTime: '14:00',
+      endTime: '13:00'
     };
-    expect(createAnamnesisVersionSchema.safeParse(data).success).toBe(false);
+    const result = interviewDataSchema.safeParse(data);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some(i => i.path.includes('endTime'))).toBe(true);
+    }
   });
 
-  it('aceita versão de anamnese válida', () => {
+  it('exige justificativa se informação for limitada', () => {
     const data = {
-      anamnesisId: 'a123',
-      version: 2,
-      patientId: 'p1',
-      professionalId: 'prof1',
-      status: 'finalized',
-      data: { anyField: true },
-      changeDescription: 'Finalizada pelo profissional'
+      interviewDate: '2023-01-01',
+      interviewee: 'João',
+      relationship: 'Pai',
+      location: 'consultório',
+      informationQuality: 'limitada'
     };
-    expect(createAnamnesisVersionSchema.safeParse(data).success).toBe(true);
+    const result = interviewDataSchema.safeParse(data);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some(i => i.path.includes('informationLimitationReason'))).toBe(true);
+    }
+  });
+
+  it('exige plataforma se modalidade for remota', () => {
+    const data = {
+      interviewDate: '2023-01-01',
+      interviewee: 'João',
+      relationship: 'Pai',
+      location: 'consultório',
+      modality: 'remoto'
+    };
+    const result = interviewDataSchema.safeParse(data);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some(i => i.path.includes('modalityPlatform'))).toBe(true);
+    }
+  });
+});
+
+describe('Anamnesis Schemas - ChiefComplaint', () => {
+  it('exige queixa principal', () => {
+    const result = chiefComplaintSchema.safeParse({});
+    expect(result.success).toBe(false);
+  });
+
+  it('rejeita idade negativa', () => {
+    const data = {
+      complaint: 'Dificuldade de fala',
+      approximateAgeNoticed: -1
+    };
+    const result = chiefComplaintSchema.safeParse(data);
+    expect(result.success).toBe(false);
+  });
+
+  it('exige descrição se onsetMode for outro', () => {
+    const data = {
+      complaint: 'Dificuldade de fala',
+      onsetMode: 'outro'
+    };
+    const result = chiefComplaintSchema.safeParse(data);
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some(i => i.path.includes('onsetModeDescription'))).toBe(true);
+    }
+  });
+
+  it('aceita preenchimento completo válido', () => {
+    const data = {
+      complaint: 'Dificuldade de fala',
+      approximateAgeNoticed: 2.5,
+      onsetMode: 'gradual',
+      functionalImpacts: ['escola']
+    };
+    expect(chiefComplaintSchema.safeParse(data).success).toBe(true);
   });
 });

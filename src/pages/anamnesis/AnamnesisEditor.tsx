@@ -1,17 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAnamnesisById, updateAnamnesis } from '../../services/anamnesisService';
-import type { Anamnesis, AnamnesisSection, AutosaveState } from '../../types/anamnesis';
+import type { Anamnesis, ActualAnamnesisSection, AutosaveState } from '../../types/anamnesis';
 import { useAuth } from '../../contexts/AuthContext';
 import { AnamnesisWizard } from '../../components/anamnesis/AnamnesisWizard';
 import { SectionContainer } from '../../components/anamnesis/SectionContainer';
 
-const SECTIONS: { id: AnamnesisSection; label: string }[] = [
-  { id: 'identification', label: 'Identificação' },
-  { id: 'clinical_history', label: 'Histórico Clínico' },
-  { id: 'development', label: 'Desenvolvimento' },
-  { id: 'social_history', label: 'Histórico Social' },
-  { id: 'other', label: 'Outros' },
+// Importando as seções criadas
+import { InterviewDataSection } from '../../components/anamnesis/InterviewDataSection';
+import { ChiefComplaintSection } from '../../components/anamnesis/ChiefComplaintSection';
+
+const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
+  { id: 'interviewData', label: 'Dados da Entrevista' },
+  { id: 'chiefComplaint', label: 'Queixa Principal' },
+  // Os demais continuam como placeholders temporários por enquanto, mas não acessíveis nesta fase (a pedido).
+  // Porém a navegação precisa aceitá-los no tipo.
 ];
 
 export default function AnamnesisEditor() {
@@ -23,52 +26,112 @@ export default function AnamnesisEditor() {
   const [autosaveState, setAutosaveState] = useState<AutosaveState>('idle');
   const [lastSavedAt, setLastSavedAt] = useState<Date | undefined>();
 
+  // Armazena temporariamente os dados editados antes de salvar
+  const currentDataRef = useRef<any>(null);
+  const currentSectionValidRef = useRef<boolean>(false);
+
   useEffect(() => {
     if (anamnesisId) {
       getAnamnesisById(anamnesisId).then(data => {
-        if (data) setAnamnesis(data);
+        if (data) {
+          // Se a seção atual for uma das velhas, atualiza para a primeira real
+          if (data.currentSection === 'identification' as any) {
+            data.currentSection = 'interviewData';
+          }
+          setAnamnesis(data);
+        }
       });
     }
   }, [anamnesisId]);
 
-  if (!anamnesis) return <div>Carregando editor...</div>;
+  const handleSectionDataChange = useCallback((data: any, isValid: boolean) => {
+    currentDataRef.current = data;
+    currentSectionValidRef.current = isValid;
+  }, []);
 
-  const handleSelectSection = (section: AnamnesisSection) => {
-    setAnamnesis({ ...anamnesis, currentSection: section });
+  const saveCurrentSection = async (navigatingTo?: ActualAnamnesisSection) => {
+    if (!user || !anamnesisId || !anamnesis) return false;
+    
+    setAutosaveState('saving');
+    try {
+      const sectionId = anamnesis.currentSection;
+      
+      // Merge new data into sections
+      const updatedSections = {
+        ...anamnesis.sections,
+        [sectionId]: currentDataRef.current
+      };
+
+      // Calculate new completedSections
+      let newCompleted = [...anamnesis.completedSections];
+      if (currentSectionValidRef.current) {
+        if (!newCompleted.includes(sectionId)) {
+          newCompleted.push(sectionId);
+        }
+      } else {
+        newCompleted = newCompleted.filter(s => s !== sectionId);
+      }
+
+      // Calcula % baseado em SECTIONS length (por enquanto 2 seções)
+      const maxSections = SECTIONS.length;
+      const completionPercentage = Math.round((newCompleted.length / maxSections) * 100);
+
+      const nextSection = navigatingTo || anamnesis.currentSection;
+
+      await updateAnamnesis(anamnesisId, {
+        currentSection: nextSection,
+        completedSections: newCompleted,
+        completionPercentage,
+        sections: updatedSections,
+      }, user.id);
+
+      setAnamnesis(prev => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          currentSection: nextSection,
+          completedSections: newCompleted,
+          completionPercentage,
+          sections: updatedSections
+        };
+      });
+
+      setAutosaveState('saved');
+      setLastSavedAt(new Date());
+      return true;
+    } catch {
+      setAutosaveState('error');
+      return false;
+    }
   };
 
-  const currentIndex = SECTIONS.findIndex(s => s.id === anamnesis.currentSection);
+  const handleSelectSection = async (section: ActualAnamnesisSection) => {
+    if (anamnesis?.currentSection === section) return;
+    await saveCurrentSection(section);
+  };
 
-  const handleNext = () => {
+  const currentIndex = SECTIONS.findIndex(s => s.id === anamnesis?.currentSection);
+
+  const handleNext = async () => {
     if (currentIndex < SECTIONS.length - 1) {
-      handleSelectSection(SECTIONS[currentIndex + 1].id);
+      await saveCurrentSection(SECTIONS[currentIndex + 1].id);
     } else {
+      await saveCurrentSection();
       navigate(`/patients/${id}/anamnesis/${anamnesisId}/review`);
     }
   };
 
-  const handlePrevious = () => {
+  const handlePrevious = async () => {
     if (currentIndex > 0) {
-      handleSelectSection(SECTIONS[currentIndex - 1].id);
+      await saveCurrentSection(SECTIONS[currentIndex - 1].id);
     }
   };
 
   const handleManualSave = async () => {
-    if (!user || !anamnesisId) return;
-    setAutosaveState('saving');
-    try {
-      await updateAnamnesis(anamnesisId, {
-        currentSection: anamnesis.currentSection,
-        completedSections: anamnesis.completedSections,
-        completionPercentage: anamnesis.completionPercentage,
-        sections: anamnesis.sections,
-      }, user.id);
-      setAutosaveState('saved');
-      setLastSavedAt(new Date());
-    } catch {
-      setAutosaveState('error');
-    }
+    await saveCurrentSection();
   };
+
+  if (!anamnesis) return <div>Carregando editor...</div>;
 
   return (
     <div className="py-6 sm:px-6 lg:px-8">
@@ -84,8 +147,25 @@ export default function AnamnesisEditor() {
         onPrevious={handlePrevious}
         onManualSave={handleManualSave}
       >
-        <SectionContainer title={SECTIONS[currentIndex]?.label || 'Seção'} description="Preencha os dados desta seção.">
-          <p className="text-gray-500">Formulário clínico (placeholder) para a seção: {anamnesis.currentSection}</p>
+        <SectionContainer 
+          title={SECTIONS.find(s => s.id === anamnesis.currentSection)?.label || 'Seção'} 
+          description="Preencha os dados abaixo."
+        >
+          {anamnesis.currentSection === 'interviewData' && (
+            <InterviewDataSection 
+              initialData={anamnesis.sections?.interviewData} 
+              onChange={handleSectionDataChange} 
+            />
+          )}
+          {anamnesis.currentSection === 'chiefComplaint' && (
+            <ChiefComplaintSection 
+              initialData={anamnesis.sections?.chiefComplaint} 
+              onChange={handleSectionDataChange} 
+            />
+          )}
+          {!['interviewData', 'chiefComplaint'].includes(anamnesis.currentSection) && (
+            <p className="text-gray-500">Formulário clínico (placeholder) para a seção: {anamnesis.currentSection}</p>
+          )}
         </SectionContainer>
       </AnamnesisWizard>
     </div>

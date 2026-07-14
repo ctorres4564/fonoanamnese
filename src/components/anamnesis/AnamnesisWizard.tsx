@@ -1,16 +1,16 @@
-import type { AnamnesisSection, AutosaveState } from '../../types/anamnesis';
+import type { ActualAnamnesisSection, AutosaveState } from '../../types/anamnesis';
 import { SectionNavigation } from './SectionNavigation';
 import { ProgressIndicator } from './ProgressIndicator';
 import { AutosaveIndicator } from './AutosaveIndicator';
 
 interface AnamnesisWizardProps {
-  sections: { id: AnamnesisSection; label: string }[];
-  currentSection: AnamnesisSection;
-  completedSections: AnamnesisSection[];
+  sections: { id: ActualAnamnesisSection | string; label: string }[];
+  currentSection: ActualAnamnesisSection | string;
+  completedSections: string[];
   completionPercentage: number;
   autosaveState: AutosaveState;
   lastSavedAt?: Date;
-  onSelectSection: (section: AnamnesisSection) => void;
+  onSelectSection: (section: any) => void;
   onNext: () => void;
   onPrevious: () => void;
   onManualSave: () => void;

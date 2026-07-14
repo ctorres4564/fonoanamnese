@@ -1,10 +1,10 @@
-import type { AnamnesisSection } from '../../types/anamnesis';
+import type { ActualAnamnesisSection } from '../../types/anamnesis';
 
 interface SectionNavigationProps {
-  sections: { id: AnamnesisSection; label: string }[];
-  currentSection: AnamnesisSection;
-  completedSections: AnamnesisSection[];
-  onSelectSection: (section: AnamnesisSection) => void;
+  sections: { id: ActualAnamnesisSection | string; label: string }[];
+  currentSection: ActualAnamnesisSection | string;
+  completedSections: string[];
+  onSelectSection: (section: any) => void;
 }
 
 export function SectionNavigation({
