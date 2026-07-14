@@ -210,9 +210,9 @@ export const neonatalHistorySchema = z.object({
 });
 
 export const pregnancyBirthNeonatalSchema = z.object({
-  pregnancy: pregnancyHistorySchema.optional().default({}),
-  birth: birthHistorySchema.optional().default({}),
-  neonatal: neonatalHistorySchema.optional().default({}),
+  pregnancy: pregnancyHistorySchema,
+  birth: birthHistorySchema,
+  neonatal: neonatalHistorySchema,
 });
 
 // Update Progress

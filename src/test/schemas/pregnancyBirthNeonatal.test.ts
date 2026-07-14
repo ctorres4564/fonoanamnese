@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { pregnancyHistorySchema, birthHistorySchema, neonatalHistorySchema } from '../../schemas/anamnesis';
+import { pregnancyHistorySchema, birthHistorySchema } from '../../schemas/anamnesis';
 
 describe('Pregnancy, Birth and Neonatal Schemas', () => {
   describe('pregnancyHistorySchema', () => {
