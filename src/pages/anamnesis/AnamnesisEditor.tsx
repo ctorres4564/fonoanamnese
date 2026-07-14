@@ -1,16 +1,16 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getAnamnesisById, updateAnamnesis } from '../../services/anamnesisService';
-import type { Anamnesis, ActualAnamnesisSection, AutosaveState } from '../../types/anamnesis';
+import type { Anamnesis, ActualAnamnesisSection, AutosaveState } from '../../domains/anamnesis';
 import { useAuth } from '../../contexts/AuthContext';
-import { AnamnesisWizard } from '../../components/anamnesis/AnamnesisWizard';
-import { SectionContainer } from '../../components/anamnesis/SectionContainer';
+import { AnamnesisWizard } from '../../domains/anamnesis/shared/components/AnamnesisWizard';
+import { SectionContainer } from '../../domains/anamnesis/shared/components/SectionContainer';
 
 // Importando as seções criadas
-import { InterviewDataSection } from '../../components/anamnesis/InterviewDataSection';
-import { ChiefComplaintSection } from '../../components/anamnesis/ChiefComplaintSection';
-import { PregnancyBirthNeonatalSection } from '../../components/anamnesis/PregnancyBirthNeonatalSection';
-import { MotorDevelopmentSection } from '../../components/anamnesis/motor/MotorDevelopmentSection';
+import { InterviewDataSection } from '../../domains/anamnesis/interview/components/InterviewDataSection';
+import { ChiefComplaintSection } from '../../domains/anamnesis/chiefComplaint/components/ChiefComplaintSection';
+import { PregnancyBirthNeonatalSection } from '../../domains/anamnesis/pregnancy/components/PregnancyBirthNeonatalSection';
+import { MotorDevelopmentSection } from '../../domains/anamnesis/motor/components/MotorDevelopmentSection';
 import { calculateAnamnesisProgress } from '../../utils/progress';
 
 const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [

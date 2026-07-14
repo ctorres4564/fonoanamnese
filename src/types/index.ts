@@ -69,4 +69,4 @@ export interface Guardian {
   updatedAt?: string | Date;
 }
 
-export * from './anamnesis';
+export * from '../domains/anamnesis';

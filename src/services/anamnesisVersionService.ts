@@ -1,6 +1,6 @@
 import { collection, doc, getDocs, query, where, setDoc, serverTimestamp, orderBy } from 'firebase/firestore';
 import { db } from './firebase';
-import type { AnamnesisVersion as AnamnesisVersionType, Anamnesis as AnamnesisType } from '../types/anamnesis';
+import type { AnamnesisVersion as AnamnesisVersionType, Anamnesis as AnamnesisType } from '../domains/anamnesis';
 
 const COLLECTION_NAME = 'anamnesisVersions';
 

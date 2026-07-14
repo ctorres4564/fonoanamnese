@@ -1,7 +1,7 @@
 import { collection, doc, getDoc, getDocs, query, where, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
-import type { UpdateAnamnesisData } from '../schemas/anamnesis';
-import type { AnamnesisStatus, Anamnesis as AnamnesisType, AnamnesisProgress } from '../types/anamnesis';
+import type { UpdateAnamnesisData } from '../domains/anamnesis';
+import type { AnamnesisStatus, Anamnesis as AnamnesisType, AnamnesisProgress } from '../domains/anamnesis';
 
 const COLLECTION_NAME = 'anamneses';
 

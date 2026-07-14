@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { listAnamnesesByPatient, createAnamnesis } from '../../services/anamnesisService';
-import type { Anamnesis } from '../../types/anamnesis';
+import type { Anamnesis } from '../../domains/anamnesis';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function AnamnesisList() {

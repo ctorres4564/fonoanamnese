@@ -1,4 +1,4 @@
-import type { ActualAnamnesisSection } from '../types/anamnesis';
+import type { ActualAnamnesisSection } from '../domains/anamnesis';
 
 export function calculateAnamnesisProgress(
   currentCompleted: ActualAnamnesisSection[],
