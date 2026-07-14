@@ -21,5 +21,31 @@ service cloud.firestore {
                     && request.auth.uid == userId
                     && request.resource.data.userId == request.auth.uid;
     }
+
+    match /patients/{patientId} {
+      // Professional can read their own patients
+      allow read: if request.auth != null && resource.data.professionalId == request.auth.uid;
+
+      // Professional can create patients, tying to their ID
+      allow create: if request.auth != null && request.resource.data.professionalId == request.auth.uid;
+
+      // Professional can update their own patients, preventing transfer of ownership
+      allow update: if request.auth != null 
+                    && resource.data.professionalId == request.auth.uid 
+                    && request.resource.data.professionalId == request.auth.uid;
+    }
+
+    match /guardians/{guardianId} {
+      // Professional can read guardians for their own patients
+      allow read: if request.auth != null && resource.data.professionalId == request.auth.uid;
+
+      // Professional can create guardians for their patients
+      allow create: if request.auth != null && request.resource.data.professionalId == request.auth.uid;
+
+      // Professional can update guardians for their patients, preventing transfer of ownership
+      allow update: if request.auth != null 
+                    && resource.data.professionalId == request.auth.uid 
+                    && request.resource.data.professionalId == request.auth.uid;
+    }
   }
 }

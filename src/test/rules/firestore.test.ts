@@ -119,6 +119,112 @@ describe('Professional Profiles Security Rules', () => {
   });
 });
 
+describe('Patients Security Rules', () => {
+  it('usuário não autenticado não pode ler pacientes', async () => {
+    const unauthedDb = testEnv.unauthenticatedContext().firestore();
+    const docRef = doc(unauthedDb, 'patients', 'pat123');
+    await assertFails(getDoc(docRef));
+  });
+
+  it('usuário não autenticado não pode criar paciente', async () => {
+    const unauthedDb = testEnv.unauthenticatedContext().firestore();
+    const docRef = doc(unauthedDb, 'patients', 'pat123');
+    await assertFails(setDoc(docRef, { professionalId: 'user123', name: 'Test' }));
+  });
+
+  it('usuário autenticado pode criar paciente vinculado ao seu professionalId', async () => {
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'patients', 'pat123');
+    await assertSucceeds(setDoc(docRef, { professionalId: 'user123', name: 'Test' }));
+  });
+
+  it('usuário autenticado não pode criar paciente vinculado a outro professionalId', async () => {
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'patients', 'pat123');
+    await assertFails(setDoc(docRef, { professionalId: 'otherUser', name: 'Test' }));
+  });
+
+  it('usuário autenticado pode ler seus próprios pacientes', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'patients', 'pat123'), { professionalId: 'user123' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'patients', 'pat123');
+    await assertSucceeds(getDoc(docRef));
+  });
+
+  it('usuário autenticado não pode ler paciente de outro profissional', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'patients', 'pat456'), { professionalId: 'otherUser' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'patients', 'pat456');
+    await assertFails(getDoc(docRef));
+  });
+
+  it('usuário autenticado pode atualizar seu próprio paciente, incluindo arquivamento lógico', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'patients', 'pat123'), { professionalId: 'user123' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'patients', 'pat123');
+    await assertSucceeds(updateDoc(docRef, { isArchived: true }));
+  });
+
+  it('usuário autenticado não pode alterar professionalId do paciente', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'patients', 'pat123'), { professionalId: 'user123' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'patients', 'pat123');
+    await assertFails(updateDoc(docRef, { professionalId: 'otherUser' }));
+  });
+
+  it('usuário autenticado não pode atualizar paciente de outro profissional', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'patients', 'pat456'), { professionalId: 'otherUser' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'patients', 'pat456');
+    await assertFails(updateDoc(docRef, { isArchived: true }));
+  });
+});
+
+describe('Guardians Security Rules', () => {
+  it('usuário não autenticado não pode acessar responsáveis', async () => {
+    const unauthedDb = testEnv.unauthenticatedContext().firestore();
+    const docRef = doc(unauthedDb, 'guardians', 'g1');
+    await assertFails(getDoc(docRef));
+  });
+
+  it('usuário autenticado pode criar responsável vinculado ao seu professionalId', async () => {
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'guardians', 'g1');
+    await assertSucceeds(setDoc(docRef, { professionalId: 'user123', patientId: 'pat1' }));
+  });
+
+  it('usuário autenticado não pode criar responsável vinculado a outro professionalId', async () => {
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'guardians', 'g1');
+    await assertFails(setDoc(docRef, { professionalId: 'otherUser', patientId: 'pat1' }));
+  });
+
+  it('usuário autenticado não pode alterar professionalId do responsável', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'guardians', 'g1'), { professionalId: 'user123' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'guardians', 'g1');
+    await assertFails(updateDoc(docRef, { professionalId: 'otherUser' }));
+  });
+});
+
 describe('Default Access', () => {
   it('nenhuma leitura ou escrita em coleção não autorizada deve ser permitida', async () => {
     const authedDb = testEnv.authenticatedContext('user123').firestore();
