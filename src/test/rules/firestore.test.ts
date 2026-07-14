@@ -193,6 +193,16 @@ describe('Patients Security Rules', () => {
     const docRef = doc(authedDb, 'patients', 'pat456');
     await assertFails(updateDoc(docRef, { isArchived: true }));
   });
+
+  it('usuário autenticado não pode excluir fisicamente um paciente (apenas exclusão lógica)', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'patients', 'pat123'), { professionalId: 'user123' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'patients', 'pat123');
+    await assertFails(deleteDoc(docRef));
+  });
 });
 
 describe('Guardians Security Rules', () => {
@@ -222,6 +232,16 @@ describe('Guardians Security Rules', () => {
     const authedDb = testEnv.authenticatedContext('user123').firestore();
     const docRef = doc(authedDb, 'guardians', 'g1');
     await assertFails(updateDoc(docRef, { professionalId: 'otherUser' }));
+  });
+
+  it('usuário autenticado não pode excluir fisicamente um responsável', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      const db = context.firestore();
+      await setDoc(doc(db, 'guardians', 'g1'), { professionalId: 'user123' });
+    });
+    const authedDb = testEnv.authenticatedContext('user123').firestore();
+    const docRef = doc(authedDb, 'guardians', 'g1');
+    await assertFails(deleteDoc(docRef));
   });
 });
 

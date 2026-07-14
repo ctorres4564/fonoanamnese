@@ -3,15 +3,20 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { createPatient } from '../../services/patientService';
+import { createPatient, updatePatient, getPatientById } from '../../services/patientService';
 import { patientSchema, type PatientFormData } from '../../schemas/patient';
 
-export const PatientForm: React.FC = () => {
+interface PatientFormProps {
+  patientId?: string; // If provided, we are editing
+}
+
+export const PatientForm: React.FC<PatientFormProps> = ({ patientId }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState<string | null>(null);
+  const [loadingData, setLoadingData] = useState(!!patientId);
   
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<PatientFormData>({
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<PatientFormData>({
     resolver: zodResolver(patientSchema),
     defaultValues: {
       status: 'evaluation',
@@ -19,14 +24,49 @@ export const PatientForm: React.FC = () => {
     }
   });
 
+  React.useEffect(() => {
+    const loadData = async () => {
+      if (patientId && user) {
+        try {
+          const data = await getPatientById(patientId);
+          if (data && data.professionalId === user.id) {
+            reset({
+              fullName: data.fullName,
+              socialName: data.socialName,
+              birthDate: data.birthDate,
+              sexAtBirth: data.sexAtBirth,
+              gender: data.gender,
+              cpf: data.cpf,
+              nationality: data.nationality,
+              birthplace: data.birthplace,
+              recordNumber: data.recordNumber,
+              status: data.status,
+              isArchived: data.isArchived,
+            });
+          }
+        } catch (e) {
+          console.error(e);
+          setServerError('Erro ao carregar paciente para edição.');
+        } finally {
+          setLoadingData(false);
+        }
+      }
+    };
+    loadData();
+  }, [patientId, user, reset]);
+
   const onSubmit = async (data: PatientFormData) => {
     if (!user) return;
     try {
       setServerError(null);
-      await createPatient({
-        ...data,
-        professionalId: user.id
-      });
+      if (patientId) {
+        await updatePatient(patientId, data);
+      } else {
+        await createPatient({
+          ...data,
+          professionalId: user.id
+        });
+      }
       navigate('/patients');
     } catch (error) {
       console.error(error);
@@ -34,9 +74,15 @@ export const PatientForm: React.FC = () => {
     }
   };
 
+  if (loadingData) {
+    return <div className="p-4 text-center">Carregando formulário...</div>;
+  }
+
   return (
     <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8 bg-white shadow rounded-md mt-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Cadastrar Novo Paciente</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">
+        {patientId ? 'Editar Paciente' : 'Cadastrar Novo Paciente'}
+      </h1>
       
       {serverError && <div className="bg-red-50 text-red-600 p-3 rounded mb-4">{serverError}</div>}
       
@@ -101,7 +147,7 @@ export const PatientForm: React.FC = () => {
             disabled={isSubmitting}
             className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition disabled:opacity-50"
           >
-            {isSubmitting ? 'Salvando...' : 'Salvar Paciente'}
+            {isSubmitting ? 'Salvando...' : patientId ? 'Atualizar Paciente' : 'Salvar Paciente'}
           </button>
         </div>
       </form>

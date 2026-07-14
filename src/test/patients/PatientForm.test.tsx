@@ -18,7 +18,7 @@ describe('PatientForm', () => {
   const renderWithProviders = () => {
     return render(
       <BrowserRouter>
-        <AuthContext.Provider value={{ user: mockUser as any, profile: null, loading: false }}>
+        <AuthContext.Provider value={{ user: mockUser as any, profile: null, loading: false, refreshProfile: async () => {} }}>
           <PatientForm />
         </AuthContext.Provider>
       </BrowserRouter>

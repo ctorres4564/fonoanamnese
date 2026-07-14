@@ -12,6 +12,7 @@ import { PatientDetails } from './pages/patients/PatientDetails';
 import { Link } from 'react-router-dom';
 
 // Um dashboard simples provisório
+
 const Dashboard = () => {
   const { user, profile } = useAuth();
   
