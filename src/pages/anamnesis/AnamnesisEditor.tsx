@@ -10,6 +10,7 @@ import { SectionContainer } from '../../components/anamnesis/SectionContainer';
 import { InterviewDataSection } from '../../components/anamnesis/InterviewDataSection';
 import { ChiefComplaintSection } from '../../components/anamnesis/ChiefComplaintSection';
 import { PregnancyBirthNeonatalSection } from '../../components/anamnesis/PregnancyBirthNeonatalSection';
+import { calculateAnamnesisProgress } from '../../utils/progress';
 
 const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
   { id: 'interviewData', label: 'Dados da Entrevista' },
@@ -64,19 +65,13 @@ export default function AnamnesisEditor() {
         [sectionId]: currentDataRef.current
       };
 
-      // Calculate new completedSections
-      let newCompleted = [...anamnesis.completedSections];
-      if (currentSectionValidRef.current) {
-        if (!newCompleted.includes(sectionId)) {
-          newCompleted.push(sectionId);
-        }
-      } else {
-        newCompleted = newCompleted.filter(s => s !== sectionId);
-      }
-
-      // Calcula % baseado em SECTIONS length (por enquanto 2 seções)
-      const maxSections = SECTIONS.length;
-      const completionPercentage = Math.round((newCompleted.length / maxSections) * 100);
+      // Calculate new completedSections and percentage
+      const { newCompleted, completionPercentage } = calculateAnamnesisProgress(
+        anamnesis.completedSections,
+        sectionId,
+        currentSectionValidRef.current,
+        SECTIONS.length
+      );
 
       const nextSection = navigatingTo || anamnesis.currentSection;
 
