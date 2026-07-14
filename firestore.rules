@@ -1,0 +1,25 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /professionalProfiles/{userId} {
+      // Must be authenticated to access anything
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Can only create their own profile, and the document ID must match their UID
+      allow create: if request.auth != null 
+                    && request.auth.uid == userId
+                    && request.resource.data.userId == request.auth.uid;
+
+      // Can update their own profile, but cannot change the userId
+      allow update: if request.auth != null 
+                    && request.auth.uid == userId
+                    && request.resource.data.userId == request.auth.uid;
+    }
+  }
+}
