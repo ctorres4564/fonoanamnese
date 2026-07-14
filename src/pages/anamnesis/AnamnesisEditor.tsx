@@ -9,10 +9,12 @@ import { SectionContainer } from '../../components/anamnesis/SectionContainer';
 // Importando as seções criadas
 import { InterviewDataSection } from '../../components/anamnesis/InterviewDataSection';
 import { ChiefComplaintSection } from '../../components/anamnesis/ChiefComplaintSection';
+import { PregnancyBirthNeonatalSection } from '../../components/anamnesis/PregnancyBirthNeonatalSection';
 
 const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
   { id: 'interviewData', label: 'Dados da Entrevista' },
   { id: 'chiefComplaint', label: 'Queixa Principal' },
+  { id: 'pregnancyBirthNeonatal', label: 'Gestação, Parto e Neonatal' },
   // Os demais continuam como placeholders temporários por enquanto, mas não acessíveis nesta fase (a pedido).
   // Porém a navegação precisa aceitá-los no tipo.
 ];
@@ -163,7 +165,13 @@ export default function AnamnesisEditor() {
               onChange={handleSectionDataChange} 
             />
           )}
-          {!['interviewData', 'chiefComplaint'].includes(anamnesis.currentSection) && (
+          {anamnesis.currentSection === 'pregnancyBirthNeonatal' && (
+            <PregnancyBirthNeonatalSection 
+              initialData={anamnesis.sections?.pregnancyBirthNeonatal} 
+              onChange={handleSectionDataChange} 
+            />
+          )}
+          {!['interviewData', 'chiefComplaint', 'pregnancyBirthNeonatal'].includes(anamnesis.currentSection) && (
             <p className="text-gray-500">Formulário clínico (placeholder) para a seção: {anamnesis.currentSection}</p>
           )}
         </SectionContainer>
