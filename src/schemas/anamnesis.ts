@@ -232,6 +232,7 @@ export const updateAnamnesisSchema = z.object({
     interviewData: z.any().optional(),
     chiefComplaint: z.any().optional(),
     pregnancyBirthNeonatal: z.any().optional(),
+    motorDevelopment: z.any().optional(),
   }).optional(),
 });
 

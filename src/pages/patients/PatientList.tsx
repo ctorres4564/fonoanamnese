@@ -14,11 +14,32 @@ export const PatientList: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [showArchived, setShowArchived] = useState(false);
 
-  const fetchPatients = async () => {
+  useEffect(() => {
+    const fetchPatients = async () => {
+      if (!user) return;
+      try {
+        setLoading(true);
+        setError(null);
+        const [activeData, archivedData] = await Promise.all([
+          listPatientsByProfessional(user.id),
+          listArchivedPatientsByProfessional(user.id)
+        ]);
+        setPatients(activeData);
+        setArchived(archivedData);
+      } catch (err) {
+        console.error(err);
+        setError('Erro ao carregar pacientes.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPatients();
+  }, [user]);
+
+  const refreshPatients = async () => {
     if (!user) return;
     try {
-      setLoading(true);
-      setError(null);
       const [activeData, archivedData] = await Promise.all([
         listPatientsByProfessional(user.id),
         listArchivedPatientsByProfessional(user.id)
@@ -27,21 +48,14 @@ export const PatientList: React.FC = () => {
       setArchived(archivedData);
     } catch (err) {
       console.error(err);
-      setError('Erro ao carregar pacientes.');
-    } finally {
-      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchPatients();
-  }, [user]);
 
   const handleArchive = async (id: string) => {
     if (window.confirm('Tem certeza que deseja arquivar este paciente?')) {
       try {
         await archivePatient(id);
-        await fetchPatients();
+        await refreshPatients();
       } catch (err) {
         console.error(err);
         alert('Erro ao arquivar paciente');
@@ -53,7 +67,7 @@ export const PatientList: React.FC = () => {
     if (window.confirm('Tem certeza que deseja reativar este paciente?')) {
       try {
         await reactivatePatient(id);
-        await fetchPatients();
+        await refreshPatients();
       } catch (err) {
         console.error(err);
         alert('Erro ao reativar paciente');

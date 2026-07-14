@@ -110,8 +110,8 @@ describe('AnamnesisEditor Integration', () => {
 
     const updateArgs = (anamnesisService.updateAnamnesis as any).mock.calls[0][1];
     
-    // Como a seção atual falhou validação e temos 2 seções completas de um total de 3, percentage deve ser ~67
-    expect(updateArgs.completionPercentage).toBe(67);
+    // Como a seção atual falhou validação e temos 2 seções completas de um total de 4, percentage deve ser 50
+    expect(updateArgs.completionPercentage).toBe(50);
   });
   
   it('should keep other section values as they were without replacing by undefined', async () => {
