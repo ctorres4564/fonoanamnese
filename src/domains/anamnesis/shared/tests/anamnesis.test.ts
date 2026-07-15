@@ -35,7 +35,8 @@ describe('Anamnesis Schemas - InterviewData', () => {
   });
 
   it('aceita data válida e campos obrigatórios preenchidos', () => {
-    const todayDate = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const todayDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
     const data = {
       interviewDate: todayDate,
       interviewee: 'João',
