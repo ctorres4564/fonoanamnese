@@ -2,8 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import custom theme variables */
+@import './styles/theme.css';
+
 @layer base {
   body {
-    @apply antialiased text-gray-900 bg-gray-50;
+    @apply antialiased text-gray-900 bg-gray-50 dark:text-gray-100 dark:bg-gray-950 transition-colors duration-200;
   }
 }

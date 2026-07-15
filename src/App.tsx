@@ -1,42 +1,47 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { ProtectedRoute } from './components/routes/ProtectedRoute';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
-import ForgotPassword from './pages/auth/ForgotPassword';
-import ProfessionalProfile from './pages/profile/ProfessionalProfile';
-import { logoutUser } from './services/auth';
-import { PatientList } from './pages/patients/PatientList';
-import { PatientForm } from './pages/patients/PatientForm';
-import { PatientDetails } from './pages/patients/PatientDetails';
-import { Link } from 'react-router-dom';
-import AnamnesisList from './pages/anamnesis/AnamnesisList';
-import AnamnesisEditor from './pages/anamnesis/AnamnesisEditor';
-import AnamnesisReview from './pages/anamnesis/AnamnesisReview';
-import AnamnesisView from './pages/anamnesis/AnamnesisView';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import { ProtectedRoute } from './components/routes/ProtectedRoute'
+import Login from './pages/auth/Login'
+import Register from './pages/auth/Register'
+import ForgotPassword from './pages/auth/ForgotPassword'
+import ProfessionalProfile from './pages/profile/ProfessionalProfile'
+import { logoutUser } from './services/auth'
+import { PatientList } from './pages/patients/PatientList'
+import { PatientForm } from './pages/patients/PatientForm'
+import { PatientDetails } from './pages/patients/PatientDetails'
+import { Link } from 'react-router-dom'
+import AnamnesisList from './pages/anamnesis/AnamnesisList'
+import AnamnesisEditor from './pages/anamnesis/AnamnesisEditor'
+import AnamnesisReview from './pages/anamnesis/AnamnesisReview'
+import AnamnesisView from './pages/anamnesis/AnamnesisView'
 
 // Um dashboard simples provisório
 
 const Dashboard = () => {
-  const { user, profile } = useAuth();
-  
+  const { user, profile } = useAuth()
+
   const handleLogout = async () => {
-    await logoutUser();
-  };
+    await logoutUser()
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">Dashboard (Provisório)</h1>
-        <p className="text-lg">Bem-vindo, {profile?.professionalName || user?.email}</p>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-8 transition-colors">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-900 p-8 rounded-lg shadow border border-gray-100 dark:border-gray-800 transition-colors">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">Dashboard (Provisório)</h1>
+        <p className="text-lg text-gray-700 dark:text-gray-300">Bem-vindo, {profile?.professionalName || user?.email}</p>
         <div className="mt-4">
-          <p className="text-sm text-gray-600">CREFONO: {profile?.crefonoNumber} - {profile?.crefonoState}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            CREFONO: {profile?.crefonoNumber} - {profile?.crefonoState}
+          </p>
         </div>
         <div className="mt-8 flex gap-4">
-          <Link to="/patients" className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
+          <Link
+            to="/patients"
+            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+          >
             Meus Pacientes
           </Link>
-          <button 
+          <button
             onClick={handleLogout}
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
           >
@@ -45,8 +50,8 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default function App() {
   return (
@@ -56,86 +61,86 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          
-          <Route 
-            path="/profile/setup" 
+
+          <Route
+            path="/profile/setup"
             element={
               <ProtectedRoute>
                 <ProfessionalProfile />
               </ProtectedRoute>
-            } 
+            }
           />
-          
-          <Route 
-            path="/dashboard" 
+
+          <Route
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
-            } 
+            }
           />
 
-          <Route 
-            path="/patients" 
+          <Route
+            path="/patients"
             element={
               <ProtectedRoute>
                 <PatientList />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/patients/new" 
+          <Route
+            path="/patients/new"
             element={
               <ProtectedRoute>
                 <PatientForm />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/patients/:id" 
+          <Route
+            path="/patients/:id"
             element={
               <ProtectedRoute>
                 <PatientDetails />
               </ProtectedRoute>
-            } 
+            }
           />
 
-          <Route 
-            path="/patients/:patientId/anamneses" 
+          <Route
+            path="/patients/:patientId/anamneses"
             element={
               <ProtectedRoute>
                 <AnamnesisList />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/patients/:patientId/anamneses/:anamnesisId/edit" 
+          <Route
+            path="/patients/:patientId/anamneses/:anamnesisId/edit"
             element={
               <ProtectedRoute>
                 <AnamnesisEditor />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/patients/:patientId/anamneses/:anamnesisId/review" 
+          <Route
+            path="/patients/:patientId/anamneses/:anamnesisId/review"
             element={
               <ProtectedRoute>
                 <AnamnesisReview />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/patients/:patientId/anamneses/:anamnesisId/view" 
+          <Route
+            path="/patients/:patientId/anamneses/:anamnesisId/view"
             element={
               <ProtectedRoute>
                 <AnamnesisView />
               </ProtectedRoute>
-            } 
+            }
           />
-          
+
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
-  );
+  )
 }

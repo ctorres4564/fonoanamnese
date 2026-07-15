@@ -34,3 +34,96 @@
 .dark .bg-base {
   background-color: hsl(var(--color-bg-h) var(--color-bg-s) var(--color-bg-l));
 }
+
+/* Dark Mode Global Component Overrides */
+.dark body {
+  background-color: hsl(var(--color-bg-dark-h) var(--color-bg-dark-s) var(--color-bg-dark-l)) !important;
+  color: #f3f4f6 !important;
+}
+
+/* Containers / Panels */
+.dark .bg-white {
+  background-color: #1f2937 !important; /* gray-800 */
+  color: #f3f4f6 !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #111827 !important; /* gray-900 */
+}
+
+/* Divisores e Bordas */
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #374151 !important; /* gray-700 */
+}
+
+.dark .border-gray-300 {
+  border-color: #4b5563 !important; /* gray-600 */
+}
+
+.dark .border-gray-200 {
+  border-color: #374151 !important; /* gray-700 */
+}
+
+/* Interacao / Hover */
+.dark .hover\:bg-gray-50:hover {
+  background-color: #374151 !important; /* gray-700 */
+}
+
+/* Textos */
+.dark .text-gray-900 {
+  color: #f9fafb !important; /* gray-50 */
+}
+
+.dark .text-gray-800 {
+  color: #f3f4f6 !important; /* gray-100 */
+}
+
+.dark .text-gray-700 {
+  color: #e5e7eb !important; /* gray-200 */
+}
+
+.dark .text-gray-600 {
+  color: #d1d5db !important; /* gray-300 */
+}
+
+.dark .text-gray-500 {
+  color: #9ca3af !important; /* gray-400 */
+}
+
+/* Formularios (Inputs, Selects, Textareas) */
+.dark input, 
+.dark select, 
+.dark textarea {
+  background-color: #111827 !important; /* gray-900 */
+  border-color: #4b5563 !important; /* gray-600 */
+  color: #f3f4f6 !important;
+}
+
+.dark input::placeholder {
+  color: #6b7280 !important;
+}
+
+.dark input:focus, 
+.dark select:focus, 
+.dark textarea:focus {
+  outline: none;
+  border-color: hsl(var(--color-primary-h) var(--color-primary-s) var(--color-primary-l)) !important;
+  box-shadow: 0 0 0 2px hsla(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l), 0.2) !important;
+}
+
+/* Botoes base */
+.dark .bg-white.text-gray-600 {
+  background-color: #374151 !important;
+  color: #e5e7eb !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .bg-white.text-gray-600:hover {
+  background-color: #4b5563 !important;
+}
+
+.dark .bg-gray-200.text-gray-800 {
+  background-color: #4b5563 !important;
+  color: #f3f4f6 !important;
+}
+
