@@ -149,7 +149,6 @@ export const changeStatus = async (
   userId: string
 ): Promise<void> => {
   const docRef = doc(db, COLLECTION_NAME, id);
-  
   const updates: any = {
     status,
     updatedAt: serverTimestamp(),
@@ -157,6 +156,14 @@ export const changeStatus = async (
   };
 
   if (status === 'finalized') {
+    // Validate transition and set finalizedAt
+    const current = await getAnamnesisById(id);
+    if (!current) {
+      throw new Error('Anamnese não encontrada');
+    }
+    if (current.status === 'finalized') {
+      throw new Error('Anamnese já finalizada');
+    }
     updates.finalizedAt = serverTimestamp();
   }
 
@@ -184,6 +191,13 @@ export const reopenAnamnesis = async (id: string, userId: string): Promise<void>
 };
 
 export const finalizeAnamnesis = async (id: string, userId: string): Promise<void> => {
+  const current = await getAnamnesisById(id);
+  if (!current) {
+    throw new Error('Anamnese não encontrada');
+  }
+  if (current.status === 'finalized') {
+    throw new Error('Anamnese já finalizada');
+  }
   const docRef = doc(db, COLLECTION_NAME, id);
   await updateDoc(docRef, {
     status: 'finalized',

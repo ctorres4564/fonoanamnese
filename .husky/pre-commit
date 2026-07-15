@@ -1,0 +1,2 @@
+# Run lint and format before commit
+npm run lint:js && npm run format

@@ -227,4 +227,13 @@ describe('AnamnesisReview', () => {
       expect(finishBtn).toBeDisabled();
     });
   });
+
+  it('deve garantir que o total de seções da revisão seja igual a 7 (excluindo placeholders)', async () => {
+    (validation.validateSection as any).mockReturnValue({ isValid: true, errors: [], filledFieldsCount: 5 });
+    renderWithRouter(<AnamnesisReview />);
+    
+    await waitFor(() => {
+      expect(screen.getByText((_, element) => element?.textContent === 'Seções Concluídas: 7 de 7')).toBeInTheDocument();
+    });
+  });
 });
