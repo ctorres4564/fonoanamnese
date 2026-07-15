@@ -1,9 +1,9 @@
 interface ProgressIndicatorProps {
-  percentage: number;
+  percentage: number
 }
 
 export function ProgressIndicator({ percentage }: ProgressIndicatorProps) {
-  const roundedPercentage = Math.round(percentage);
+  const roundedPercentage = Math.round(percentage)
 
   return (
     <div className="w-full">
@@ -12,11 +12,11 @@ export function ProgressIndicator({ percentage }: ProgressIndicatorProps) {
         <span className="text-sm font-medium text-gray-700">{roundedPercentage}%</span>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2.5">
-        <div 
+        <div
           className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
           style={{ width: `${roundedPercentage}%` }}
         ></div>
       </div>
     </div>
-  );
+  )
 }

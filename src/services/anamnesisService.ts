@@ -238,4 +238,3 @@ export const listAnamnesesByProfessional = async (
     ...doc.data(),
   })) as AnamnesisType[]
 }
-

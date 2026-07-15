@@ -76,7 +76,9 @@ const Dashboard = () => {
   ).length
   const reviewAnamnesesCount = anamneses.filter((a) => a.status === 'review').length
   const finalizedAnamnesesCount = anamneses.filter((a) => a.status === 'finalized').length
-  const alertsCount = anamneses.filter((a) => (a as any).alerts && (a as any).alerts.length > 0).length
+  const alertsCount = anamneses.filter(
+    (a) => (a as any).alerts && (a as any).alerts.length > 0,
+  ).length
 
   // Obter pacientes recentes (ordenados por data de criacao descendente)
   const recentPatients = [...patients]

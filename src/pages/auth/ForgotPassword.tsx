@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Link } from 'react-router-dom';
-import { forgotPasswordSchema, type ForgotPasswordFormInputs } from '../../schemas/auth';
-import { resetPassword } from '../../services/auth';
-import { KeyRound } from 'lucide-react';
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Link } from 'react-router-dom'
+import { forgotPasswordSchema, type ForgotPasswordFormInputs } from '../../schemas/auth'
+import { resetPassword } from '../../services/auth'
+import { KeyRound } from 'lucide-react'
 
 export default function ForgotPassword() {
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<boolean>(false)
 
   const {
     register,
@@ -16,22 +16,22 @@ export default function ForgotPassword() {
     formState: { errors, isSubmitting },
   } = useForm<ForgotPasswordFormInputs>({
     resolver: zodResolver(forgotPasswordSchema),
-  });
+  })
 
   const onSubmit = async (data: ForgotPasswordFormInputs) => {
     try {
-      setError(null);
-      setSuccess(false);
-      await resetPassword(data.email);
-      setSuccess(true);
+      setError(null)
+      setSuccess(false)
+      await resetPassword(data.email)
+      setSuccess(true)
     } catch (err: any) {
       if (err.code === 'auth/user-not-found') {
-        setError('Usuário não encontrado.');
+        setError('Usuário não encontrado.')
       } else {
-        setError('Ocorreu um erro. Tente novamente mais tarde.');
+        setError('Ocorreu um erro. Tente novamente mais tarde.')
       }
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -40,9 +40,7 @@ export default function ForgotPassword() {
           <div className="bg-blue-100 p-3 rounded-full mb-4">
             <KeyRound className="h-8 w-8 text-blue-600" />
           </div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
-            Recuperar Senha
-          </h2>
+          <h2 className="text-center text-3xl font-extrabold text-gray-900">Recuperar Senha</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Digite seu e-mail para receber as instruções
           </p>
@@ -106,5 +104,5 @@ export default function ForgotPassword() {
         )}
       </div>
     </div>
-  );
+  )
 }

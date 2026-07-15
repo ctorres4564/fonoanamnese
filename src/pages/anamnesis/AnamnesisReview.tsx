@@ -1,13 +1,24 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getAnamnesisById, updateAnamnesis, finalizeAnamnesis } from '../../services/anamnesisService';
-import { getPatientById } from '../../services/patientService';
-import type { Anamnesis, ActualAnamnesisSection } from '../../domains/anamnesis';
-import type { Patient } from '../../types';
-import { useAuth } from '../../contexts/AuthContext';
-import { validateSection } from '../../utils/validation';
-import type { SectionValidationResult } from '../../utils/validation';
-import { CheckCircle, AlertCircle, XCircle, ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import {
+  getAnamnesisById,
+  updateAnamnesis,
+  finalizeAnamnesis,
+} from '../../services/anamnesisService'
+import { getPatientById } from '../../services/patientService'
+import type { Anamnesis, ActualAnamnesisSection } from '../../domains/anamnesis'
+import type { Patient } from '../../types'
+import { useAuth } from '../../contexts/AuthContext'
+import { validateSection } from '../../utils/validation'
+import type { SectionValidationResult } from '../../utils/validation'
+import {
+  CheckCircle,
+  AlertCircle,
+  XCircle,
+  ChevronDown,
+  ChevronUp,
+  AlertTriangle,
+} from 'lucide-react'
 
 const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
   { id: 'interviewData', label: 'Dados da Entrevista' },
@@ -17,91 +28,91 @@ const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
   { id: 'communicationDevelopment', label: 'Comunicação Inicial' },
   { id: 'languageDevelopment', label: 'Linguagem Receptiva e Expressiva' },
   { id: 'speechDevelopment', label: 'Fala e Articulação' },
-];
+]
 
 export default function AnamnesisReview() {
-  const { patientId, anamnesisId } = useParams<{ patientId: string; anamnesisId: string }>();
-  const navigate = useNavigate();
-  const { user, profile } = useAuth();
+  const { patientId, anamnesisId } = useParams<{ patientId: string; anamnesisId: string }>()
+  const navigate = useNavigate()
+  const { user, profile } = useAuth()
 
-  const [anamnesis, setAnamnesis] = useState<Anamnesis | null>(null);
-  const [patient, setPatient] = useState<Patient | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [isFinalizing, setIsFinalizing] = useState(false);
+  const [anamnesis, setAnamnesis] = useState<Anamnesis | null>(null)
+  const [patient, setPatient] = useState<Patient | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({})
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const [isFinalizing, setIsFinalizing] = useState(false)
 
   useEffect(() => {
     async function loadData() {
-      if (!patientId || !anamnesisId) return;
+      if (!patientId || !anamnesisId) return
       try {
-        setLoading(true);
+        setLoading(true)
         const [patientData, anamnesisData] = await Promise.all([
           getPatientById(patientId),
-          getAnamnesisById(anamnesisId)
-        ]);
+          getAnamnesisById(anamnesisId),
+        ])
 
-        if (!patientData) throw new Error('Paciente não encontrado');
-        if (!anamnesisData) throw new Error('Anamnese não encontrada');
-        
+        if (!patientData) throw new Error('Paciente não encontrado')
+        if (!anamnesisData) throw new Error('Anamnese não encontrada')
+
         // Validações de segurança e acesso
         if (anamnesisData.patientId !== patientId) {
-          throw new Error('Anamnese não pertence a este paciente');
+          throw new Error('Anamnese não pertence a este paciente')
         }
         if (anamnesisData.professionalId !== user?.id) {
-          throw new Error('Acesso negado. Apenas o proprietário pode revisar.');
+          throw new Error('Acesso negado. Apenas o proprietário pode revisar.')
         }
 
         if (anamnesisData.status === 'finalized') {
-          navigate(`/patients/${patientId}/anamneses/${anamnesisId}/view`);
-          return;
+          navigate(`/patients/${patientId}/anamneses/${anamnesisId}/view`)
+          return
         }
 
-        setPatient(patientData);
-        setAnamnesis(anamnesisData);
+        setPatient(patientData)
+        setAnamnesis(anamnesisData)
       } catch (err: any) {
-        setError(err.message || 'Erro ao carregar revisão');
+        setError(err.message || 'Erro ao carregar revisão')
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
-    loadData();
-  }, [patientId, anamnesisId, user, navigate]);
+    loadData()
+  }, [patientId, anamnesisId, user, navigate])
 
   const toggleSection = (id: string) => {
-    setExpandedSections(prev => ({ ...prev, [id]: !prev[id] }));
-  };
+    setExpandedSections((prev) => ({ ...prev, [id]: !prev[id] }))
+  }
 
   const handleEditSection = async (sectionId: ActualAnamnesisSection) => {
-    if (!anamnesisId) return;
+    if (!anamnesisId) return
     try {
       // Set the current section to the clicked one, so the editor opens there
-      await updateAnamnesis(anamnesisId, { currentSection: sectionId }, user?.id || '');
-      navigate(`/patients/${patientId}/anamneses/${anamnesisId}/edit`);
+      await updateAnamnesis(anamnesisId, { currentSection: sectionId }, user?.id || '')
+      navigate(`/patients/${patientId}/anamneses/${anamnesisId}/edit`)
     } catch (err) {
-      console.error('Erro ao navegar para a seção', err);
+      console.error('Erro ao navegar para a seção', err)
     }
-  };
+  }
 
   const handleFinalize = async () => {
-    if (!anamnesisId || !user) return;
-    setIsFinalizing(true);
+    if (!anamnesisId || !user) return
+    setIsFinalizing(true)
     try {
-      await finalizeAnamnesis(anamnesisId, user.id);
-      navigate(`/patients/${patientId}/anamneses/${anamnesisId}/view`);
+      await finalizeAnamnesis(anamnesisId, user.id)
+      navigate(`/patients/${patientId}/anamneses/${anamnesisId}/view`)
     } catch (err) {
-      console.error(err);
-      alert('Erro ao finalizar anamnese.');
+      console.error(err)
+      alert('Erro ao finalizar anamnese.')
     } finally {
-      setIsFinalizing(false);
-      setShowConfirmModal(false);
+      setIsFinalizing(false)
+      setShowConfirmModal(false)
     }
-  };
+  }
 
   if (loading) {
-    return <div className="p-8 text-center text-gray-500">Carregando revisão...</div>;
+    return <div className="p-8 text-center text-gray-500">Carregando revisão...</div>
   }
 
   if (error) {
@@ -110,7 +121,7 @@ export default function AnamnesisReview() {
         <div className="bg-red-50 text-red-700 p-4 rounded-md border border-red-200">
           <h2 className="font-bold text-lg mb-2">Erro</h2>
           <p>{error}</p>
-          <button 
+          <button
             onClick={() => navigate(`/patients/${patientId}`)}
             className="mt-4 text-sm underline hover:text-red-800"
           >
@@ -118,30 +129,29 @@ export default function AnamnesisReview() {
           </button>
         </div>
       </div>
-    );
+    )
   }
 
-  if (!anamnesis || !patient) return null;
+  if (!anamnesis || !patient) return null
 
   // Realiza validação estrita de cada seção
-  const validations: Record<ActualAnamnesisSection, SectionValidationResult> = {} as any;
-  let hasIncompleteRequired = false;
-  let completedCount = 0;
+  const validations: Record<ActualAnamnesisSection, SectionValidationResult> = {} as any
+  let hasIncompleteRequired = false
+  let completedCount = 0
 
-  SECTIONS.forEach(sec => {
-    const data = anamnesis.sections?.[sec.id];
-    const valResult = validateSection(sec.id, data);
-    validations[sec.id] = valResult;
+  SECTIONS.forEach((sec) => {
+    const data = anamnesis.sections?.[sec.id]
+    const valResult = validateSection(sec.id, data)
+    validations[sec.id] = valResult
     if (valResult.isValid) {
-      completedCount++;
+      completedCount++
     } else {
-      hasIncompleteRequired = true;
+      hasIncompleteRequired = true
     }
-  });
+  })
 
-  const canFinalize = !hasIncompleteRequired && 
-                      profile?.crefonoNumber && 
-                      anamnesis.status !== 'archived';
+  const canFinalize =
+    !hasIncompleteRequired && profile?.crefonoNumber && anamnesis.status !== 'archived'
 
   return (
     <div className="py-6 sm:px-6 lg:px-8 max-w-5xl mx-auto">
@@ -150,18 +160,53 @@ export default function AnamnesisReview() {
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 mb-2">Revisão da Anamnese</h1>
-            <p className="text-gray-700"><strong>Paciente:</strong> {(patient as any).fullName || (patient as any).name}</p>
-            <p className="text-gray-700"><strong>Prontuário:</strong> {patient.recordNumber || 'N/A'}</p>
+            <p className="text-gray-700">
+              <strong>Paciente:</strong> {(patient as any).fullName || (patient as any).name}
+            </p>
+            <p className="text-gray-700">
+              <strong>Prontuário:</strong> {patient.recordNumber || 'N/A'}
+            </p>
           </div>
           <div className="text-right text-sm text-gray-600">
-            <p><strong>Status:</strong> {anamnesis.status === 'draft' ? 'Rascunho' : anamnesis.status}</p>
-            <p><strong>Versão:</strong> {anamnesis.version}</p>
-            <p><strong>Seções Concluídas:</strong> {completedCount} de {SECTIONS.length}</p>
-            <p><strong>Última Atualização:</strong> {
-              (anamnesis.updatedAt as any)?.toMillis 
-                ? new Date((anamnesis.updatedAt as any).toMillis()).toLocaleString() 
-                : new Date(anamnesis.updatedAt as any).toLocaleString()
-            }</p>
+            <p>
+              <strong>Status:</strong>{' '}
+              {anamnesis.status === 'draft' ? 'Rascunho' : anamnesis.status}
+            </p>
+            <p>
+              <strong>Versão:</strong> {anamnesis.version}
+            </p>
+            <p>
+              <strong>Seções Concluídas:</strong> {completedCount} de {SECTIONS.length}
+            </p>
+            <p>
+              <strong>Última Atualização:</strong>{' '}
+              {(anamnesis.updatedAt as any)?.toMillis
+                ? new Date((anamnesis.updatedAt as any).toMillis()).toLocaleString()
+                : new Date(anamnesis.updatedAt as any).toLocaleString()}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Banner Informativo de Versão Parcial (MVP) */}
+      <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+        <div className="flex">
+          <div className="flex-shrink-0 text-blue-400">
+            <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <p className="text-sm text-blue-700">
+              <strong>Nota de Versão:</strong> Esta anamnese será finalizada contendo apenas os 7
+              módulos clínicos ativos atualmente implementados na versão atual do sistema. Os demais
+              módulos previstos (AVDs/Sono, Alimentação, Histórico de Saúde e Familiar) ainda não
+              estão disponíveis.
+            </p>
           </div>
         </div>
       </div>
@@ -175,7 +220,8 @@ export default function AnamnesisReview() {
             </div>
             <div className="ml-3">
               <p className="text-sm text-yellow-700">
-                Seu perfil profissional está incompleto (CREFONO ausente). Você não poderá finalizar a anamnese até completar seu cadastro.
+                Seu perfil profissional está incompleto (CREFONO ausente). Você não poderá finalizar
+                a anamnese até completar seu cadastro.
               </p>
             </div>
           </div>
@@ -185,16 +231,23 @@ export default function AnamnesisReview() {
       {/* Lista de Seções */}
       <div className="space-y-4 mb-8">
         {SECTIONS.map((sec) => {
-          const val = validations[sec.id];
-          const isExpanded = !!expandedSections[sec.id];
-          const data = anamnesis.sections?.[sec.id];
-          const isNotStarted = val.filledFieldsCount === 0 && !val.isValid;
+          const val = validations[sec.id]
+          const isExpanded = !!expandedSections[sec.id]
+          const data = anamnesis.sections?.[sec.id]
+          const isNotStarted = val.filledFieldsCount === 0 && !val.isValid
 
           return (
-            <div key={sec.id} className={`border rounded-lg bg-white overflow-hidden ${
-              val.isValid ? 'border-green-200' : isNotStarted ? 'border-gray-200' : 'border-yellow-200'
-            }`}>
-              <div 
+            <div
+              key={sec.id}
+              className={`border rounded-lg bg-white overflow-hidden ${
+                val.isValid
+                  ? 'border-green-200'
+                  : isNotStarted
+                    ? 'border-gray-200'
+                    : 'border-yellow-200'
+              }`}
+            >
+              <div
                 className={`p-4 flex items-center justify-between cursor-pointer ${
                   val.isValid ? 'bg-green-50' : isNotStarted ? 'bg-gray-50' : 'bg-yellow-50'
                 }`}
@@ -217,9 +270,15 @@ export default function AnamnesisReview() {
                 </div>
                 <div className="flex items-center gap-4">
                   {val.filledFieldsCount > 0 && (
-                    <span className="text-xs text-gray-500">{val.filledFieldsCount} campos preenchidos</span>
+                    <span className="text-xs text-gray-500">
+                      {val.filledFieldsCount} campos preenchidos
+                    </span>
                   )}
-                  {isExpanded ? <ChevronUp className="h-5 w-5 text-gray-400" /> : <ChevronDown className="h-5 w-5 text-gray-400" />}
+                  {isExpanded ? (
+                    <ChevronUp className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5 text-gray-400" />
+                  )}
                 </div>
               </div>
 
@@ -246,10 +305,12 @@ export default function AnamnesisReview() {
                         {/* Exibe um slice simplificado das chaves para evitar vazamento de tela inteira */}
                         {JSON.stringify(
                           Object.fromEntries(
-                            Object.entries(data).filter(([_, v]) => v !== undefined && v !== '' && v !== null)
-                          ), 
-                          null, 
-                          2
+                            Object.entries(data).filter(
+                              ([_, v]) => v !== undefined && v !== '' && v !== null,
+                            ),
+                          ),
+                          null,
+                          2,
                         )}
                       </pre>
                     </div>
@@ -258,8 +319,8 @@ export default function AnamnesisReview() {
                   <div className="flex justify-end">
                     <button
                       onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditSection(sec.id);
+                        e.stopPropagation()
+                        handleEditSection(sec.id)
                       }}
                       className="text-indigo-600 hover:text-indigo-800 text-sm font-medium px-3 py-1.5 border border-indigo-200 rounded bg-indigo-50 hover:bg-indigo-100 transition"
                     >
@@ -269,7 +330,7 @@ export default function AnamnesisReview() {
                 </div>
               )}
             </div>
-          );
+          )
         })}
       </div>
 
@@ -295,7 +356,7 @@ export default function AnamnesisReview() {
             Voltar ao Editor
           </button>
         </div>
-        
+
         <div className="flex gap-4">
           <button
             onClick={() => navigate(`/patients/${patientId}/anamneses`)}
@@ -303,13 +364,13 @@ export default function AnamnesisReview() {
           >
             Salvar como Rascunho
           </button>
-          
+
           <button
             onClick={() => setShowConfirmModal(true)}
             disabled={!canFinalize}
             className={`px-6 py-2 rounded-md text-sm font-medium text-white transition ${
-              canFinalize 
-                ? 'bg-green-600 hover:bg-green-700 shadow-sm' 
+              canFinalize
+                ? 'bg-green-600 hover:bg-green-700 shadow-sm'
                 : 'bg-gray-400 cursor-not-allowed'
             }`}
             title={!canFinalize ? 'Resolva as pendências antes de finalizar' : ''}
@@ -326,7 +387,9 @@ export default function AnamnesisReview() {
             <div className="fixed inset-0 transition-opacity" aria-hidden="true">
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
+              &#8203;
+            </span>
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
@@ -339,9 +402,9 @@ export default function AnamnesisReview() {
                     </h3>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                        Após a finalização, esta versão não poderá ser editada diretamente. 
-                        Qualquer correção futura deverá gerar uma nova versão da anamnese.
-                        Deseja realmente finalizar?
+                        Após a finalização, esta versão não poderá ser editada diretamente. Qualquer
+                        correção futura deverá gerar uma nova versão da anamnese. Deseja realmente
+                        finalizar?
                       </p>
                     </div>
                   </div>
@@ -370,5 +433,5 @@ export default function AnamnesisReview() {
         </div>
       )}
     </div>
-  );
+  )
 }

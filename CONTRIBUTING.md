@@ -23,11 +23,13 @@ Obrigado pelo seu interesse em contribuir para o projeto **FonoAnamnese**! Este 
 ## 🧪 Testes Unitários
 
 Antes de alterar ou refatorar qualquer funcionalidade crítica:
+
 1. Certifique-se de que os testes unitários existentes estão passando.
 2. Crie ou atualize os testes unitários (utilizando **Vitest** e **React Testing Library**) para abranger as novas implementações.
 3. A meta é manter a cobertura de testes do projeto alta e livre de regressões.
 
 Execute os testes localmente com:
+
 ```bash
 npm run test
 ```
@@ -45,6 +47,7 @@ Adotamos a especificação de [Conventional Commits](https://www.conventionalcom
 ```
 
 ### Exemplos de tipos permitidos:
+
 - `feat`: Uma nova funcionalidade ou componente (ex: `feat(ui): add theme toggle button`).
 - `fix`: Correção de um bug (ex: `fix(auth): redirect user when session expires`).
 - `docs`: Modificações em documentações (ex: `docs: update architectural flow diagrams`).

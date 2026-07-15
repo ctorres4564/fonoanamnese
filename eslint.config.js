@@ -18,8 +18,8 @@ export default [
       '.git/**',
       '.github/**',
       'vite.config.ts',
-      'vitest.config.ts'
-    ]
+      'vitest.config.ts',
+    ],
   },
   js.configs.recommended,
   eslintConfigPrettier,
@@ -43,7 +43,7 @@ export default [
     },
     plugins: {
       '@typescript-eslint': tsPlugin,
-      'react': reactPlugin,
+      react: reactPlugin,
       'react-hooks': reactHooksPlugin,
       'jsx-a11y': jsxA11yPlugin,
     },

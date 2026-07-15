@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createGuardian } from '../../services/guardianService';
-import * as firestore from 'firebase/firestore';
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { createGuardian } from '../../services/guardianService'
+import * as firestore from 'firebase/firestore'
 
 vi.mock('firebase/firestore', () => {
   return {
@@ -14,25 +14,25 @@ vi.mock('firebase/firestore', () => {
     where: vi.fn(),
     serverTimestamp: vi.fn(),
     writeBatch: vi.fn(),
-  };
-});
+  }
+})
 
 // We need to mock the db from our firebase config
 vi.mock('../../services/firebase', () => ({
   db: {},
-}));
+}))
 
 describe('GuardianService', () => {
   const mockBatch = {
     update: vi.fn(),
     set: vi.fn(),
     commit: vi.fn().mockResolvedValue(undefined),
-  };
+  }
 
   beforeEach(() => {
-    vi.clearAllMocks();
-    (firestore.writeBatch as any).mockReturnValue(mockBatch);
-  });
+    vi.clearAllMocks()
+    ;(firestore.writeBatch as any).mockReturnValue(mockBatch)
+  })
 
   it('createGuardian with isPrimaryContact=true should use batch and update other guardians', async () => {
     // Setup mocks
@@ -43,11 +43,11 @@ describe('GuardianService', () => {
           id: 'old_primary',
           ref: 'old_primary_ref',
           data: () => ({ isPrimaryContact: true }),
-        });
+        })
       },
-    };
-    (firestore.getDocs as any).mockResolvedValue(mockQuerySnapshot);
-    (firestore.doc as any).mockReturnValue('new_doc_ref');
+    }
+    ;(firestore.getDocs as any).mockResolvedValue(mockQuerySnapshot)
+    ;(firestore.doc as any).mockReturnValue('new_doc_ref')
 
     const newGuardian = {
       professionalId: 'pro123',
@@ -64,21 +64,27 @@ describe('GuardianService', () => {
       isPrimaryContact: true, // TRUE!
       canReceiveInformation: true,
       canAttendSessions: true,
-    };
+    }
 
-    await createGuardian(newGuardian);
+    await createGuardian(newGuardian)
 
     // Deve ter criado um batch
-    expect(firestore.writeBatch).toHaveBeenCalled();
+    expect(firestore.writeBatch).toHaveBeenCalled()
     // O batch deve ter chamado update para remover o primary do outro
-    expect(mockBatch.update).toHaveBeenCalledWith('old_primary_ref', expect.objectContaining({ isPrimaryContact: false }));
+    expect(mockBatch.update).toHaveBeenCalledWith(
+      'old_primary_ref',
+      expect.objectContaining({ isPrimaryContact: false }),
+    )
     // E chamado set para o novo
-    expect(mockBatch.set).toHaveBeenCalledWith('new_doc_ref', expect.objectContaining({ fullName: 'Novo Principal', isPrimaryContact: true }));
-    expect(mockBatch.commit).toHaveBeenCalled();
-  });
+    expect(mockBatch.set).toHaveBeenCalledWith(
+      'new_doc_ref',
+      expect.objectContaining({ fullName: 'Novo Principal', isPrimaryContact: true }),
+    )
+    expect(mockBatch.commit).toHaveBeenCalled()
+  })
 
   it('createGuardian with isPrimaryContact=false should just use addDoc', async () => {
-    (firestore.addDoc as any).mockResolvedValue({ id: 'new_id' });
+    ;(firestore.addDoc as any).mockResolvedValue({ id: 'new_id' })
 
     const newGuardian = {
       professionalId: 'pro123',
@@ -95,11 +101,11 @@ describe('GuardianService', () => {
       isPrimaryContact: false, // FALSE
       canReceiveInformation: false,
       canAttendSessions: false,
-    };
+    }
 
-    await createGuardian(newGuardian);
+    await createGuardian(newGuardian)
 
-    expect(firestore.writeBatch).not.toHaveBeenCalled();
-    expect(firestore.addDoc).toHaveBeenCalled();
-  });
-});
+    expect(firestore.writeBatch).not.toHaveBeenCalled()
+    expect(firestore.addDoc).toHaveBeenCalled()
+  })
+})

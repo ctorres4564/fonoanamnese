@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { patientSchema } from '../../schemas/patient';
+import { describe, it, expect } from 'vitest'
+import { patientSchema } from '../../schemas/patient'
 
 describe('patientSchema', () => {
   const validPatient = {
@@ -14,35 +14,35 @@ describe('patientSchema', () => {
     recordNumber: '12345',
     status: 'evaluation',
     isArchived: false,
-  };
+  }
 
   it('validates a correct patient object', () => {
-    const result = patientSchema.safeParse(validPatient);
-    expect(result.success).toBe(true);
-  });
+    const result = patientSchema.safeParse(validPatient)
+    expect(result.success).toBe(true)
+  })
 
   it('rejects future birthDates', () => {
-    const futureDate = new Date();
-    futureDate.setFullYear(futureDate.getFullYear() + 1);
-    
+    const futureDate = new Date()
+    futureDate.setFullYear(futureDate.getFullYear() + 1)
+
     const invalidPatient = {
       ...validPatient,
       birthDate: futureDate.toISOString().split('T')[0],
-    };
-
-    const result = patientSchema.safeParse(invalidPatient);
-    expect(result.success).toBe(false);
-    if (!result.success) {
-      expect(result.error.issues[0].message).toBe('A data de nascimento não pode ser no futuro');
     }
-  });
+
+    const result = patientSchema.safeParse(invalidPatient)
+    expect(result.success).toBe(false)
+    if (!result.success) {
+      expect(result.error.issues[0].message).toBe('A data de nascimento não pode ser no futuro')
+    }
+  })
 
   it('requires a fullName of at least 3 characters', () => {
     const invalidPatient = {
       ...validPatient,
       fullName: 'Ma',
-    };
-    const result = patientSchema.safeParse(invalidPatient);
-    expect(result.success).toBe(false);
-  });
-});
+    }
+    const result = patientSchema.safeParse(invalidPatient)
+    expect(result.success).toBe(false)
+  })
+})

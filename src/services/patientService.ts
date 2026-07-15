@@ -8,71 +8,78 @@ import {
   query,
   where,
   serverTimestamp,
-} from 'firebase/firestore';
-import { db } from './firebase';
-import type { Patient } from '../types';
+} from 'firebase/firestore'
+import { db } from './firebase'
+import type { Patient } from '../types'
 
-const PATIENTS_COLLECTION = 'patients';
+const PATIENTS_COLLECTION = 'patients'
 
-export const createPatient = async (patientData: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
+export const createPatient = async (
+  patientData: Omit<Patient, 'id' | 'createdAt' | 'updatedAt'>,
+): Promise<string> => {
   const docRef = await addDoc(collection(db, PATIENTS_COLLECTION), {
     ...patientData,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
-  });
-  return docRef.id;
-};
+  })
+  return docRef.id
+}
 
-export const updatePatient = async (patientId: string, patientData: Partial<Omit<Patient, 'id' | 'professionalId' | 'createdAt' | 'updatedAt'>>): Promise<void> => {
-  const docRef = doc(db, PATIENTS_COLLECTION, patientId);
+export const updatePatient = async (
+  patientId: string,
+  patientData: Partial<Omit<Patient, 'id' | 'professionalId' | 'createdAt' | 'updatedAt'>>,
+): Promise<void> => {
+  const docRef = doc(db, PATIENTS_COLLECTION, patientId)
   await updateDoc(docRef, {
     ...patientData,
     updatedAt: serverTimestamp(),
-  });
-};
+  })
+}
 
 export const getPatientById = async (patientId: string): Promise<Patient | null> => {
-  const docRef = doc(db, PATIENTS_COLLECTION, patientId);
-  const docSnap = await getDoc(docRef);
+  const docRef = doc(db, PATIENTS_COLLECTION, patientId)
+  const docSnap = await getDoc(docRef)
 
   if (docSnap.exists()) {
-    return { id: docSnap.id, ...docSnap.data() } as Patient;
+    return { id: docSnap.id, ...docSnap.data() } as Patient
   }
-  return null;
-};
+  return null
+}
 
 export const listPatientsByProfessional = async (professionalId: string): Promise<Patient[]> => {
   const q = query(
     collection(db, PATIENTS_COLLECTION),
     where('professionalId', '==', professionalId),
-    where('isArchived', '==', false)
-  );
+    where('isArchived', '==', false),
+  )
 
-  const querySnapshot = await getDocs(q);
+  const querySnapshot = await getDocs(q)
   return querySnapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
-  })) as Patient[];
-};
+  })) as Patient[]
+}
 
-export const listArchivedPatientsByProfessional = async (professionalId: string): Promise<Patient[]> => {
+export const listArchivedPatientsByProfessional = async (
+  professionalId: string,
+): Promise<Patient[]> => {
   const q = query(
     collection(db, PATIENTS_COLLECTION),
     where('professionalId', '==', professionalId),
-    where('isArchived', '==', true)
-  );
+    where('isArchived', '==', true),
+  )
 
-  const querySnapshot = await getDocs(q);
+  const querySnapshot = await getDocs(q)
   return querySnapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
-  })) as Patient[];
-};
+  })) as Patient[]
+}
 
 export const archivePatient = async (patientId: string): Promise<void> => {
-  await updatePatient(patientId, { isArchived: true });
-};
+  await updatePatient(patientId, { isArchived: true })
+}
 
 export const reactivatePatient = async (patientId: string): Promise<void> => {
-  await updatePatient(patientId, { isArchived: false });
-};
+  await updatePatient(patientId, { isArchived: false })
+}

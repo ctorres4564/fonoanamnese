@@ -3,8 +3,8 @@ export const COMMUNICATION_BEHAVIOR_STATUS = [
   'ausente',
   'inconsistente',
   'não observado',
-  'não informado'
-] as const;
+  'não informado',
+] as const
 
 export const COMMUNICATION_MODES = [
   'fala',
@@ -16,18 +16,9 @@ export const COMMUNICATION_MODES = [
   'figuras',
   'comunicação alternativa',
   'dispositivo eletrônico',
-  'outro'
-] as const;
+  'outro',
+] as const
 
-export const REGRESSION_ONSET_MODES = [
-  'súbito',
-  'gradual',
-  'não informado',
-  'outro'
-] as const;
+export const REGRESSION_ONSET_MODES = ['súbito', 'gradual', 'não informado', 'outro'] as const
 
-export const YES_NO_OPTIONS = [
-  'sim',
-  'não',
-  'não informado'
-] as const;
+export const YES_NO_OPTIONS = ['sim', 'não', 'não informado'] as const

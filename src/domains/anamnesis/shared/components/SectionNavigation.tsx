@@ -1,23 +1,23 @@
-import type { ActualAnamnesisSection } from '../..';
+import type { ActualAnamnesisSection } from '../..'
 
 interface SectionNavigationProps {
-  sections: { id: ActualAnamnesisSection | string; label: string }[];
-  currentSection: ActualAnamnesisSection | string;
-  completedSections: string[];
-  onSelectSection: (section: any) => void;
+  sections: { id: ActualAnamnesisSection | string; label: string }[]
+  currentSection: ActualAnamnesisSection | string
+  completedSections: string[]
+  onSelectSection: (section: any) => void
 }
 
 export function SectionNavigation({
   sections,
   currentSection,
   completedSections,
-  onSelectSection
+  onSelectSection,
 }: SectionNavigationProps) {
   return (
     <nav className="flex flex-col space-y-1">
       {sections.map((section) => {
-        const isCurrent = section.id === currentSection;
-        const isCompleted = completedSections.includes(section.id);
+        const isCurrent = section.id === currentSection
+        const isCompleted = completedSections.includes(section.id)
 
         return (
           <button
@@ -35,8 +35,8 @@ export function SectionNavigation({
               )}
             </div>
           </button>
-        );
+        )
       })}
     </nav>
-  );
+  )
 }

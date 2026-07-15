@@ -1,12 +1,12 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
-import { interviewDataSchema } from '../..';
-import type { InterviewData } from '../..';
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
+import { interviewDataSchema } from '../..'
+import type { InterviewData } from '../..'
 
 interface InterviewDataSectionProps {
-  initialData?: Partial<InterviewData>;
-  onChange: (data: Partial<InterviewData>, isValid: boolean) => void;
+  initialData?: Partial<InterviewData>
+  onChange: (data: Partial<InterviewData>, isValid: boolean) => void
 }
 
 export function InterviewDataSection({ initialData, onChange }: InterviewDataSectionProps) {
@@ -14,32 +14,32 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
     register,
     watch,
     formState: { errors, isValid },
-    getValues
+    getValues,
   } = useForm<InterviewData>({
     resolver: zodResolver(interviewDataSchema),
     defaultValues: initialData || {},
-    mode: 'onChange'
-  });
+    mode: 'onChange',
+  })
 
   // Watch fields for conditional logic
-  const location = watch('location');
-  const informationQuality = watch('informationQuality');
-  const modality = watch('modality');
+  const location = watch('location')
+  const informationQuality = watch('informationQuality')
+  const modality = watch('modality')
 
   // Trigger onChange when form values change
   useEffect(() => {
     const subscription = watch(() => {
-      onChange(getValues(), isValid);
-    });
+      onChange(getValues(), isValid)
+    })
     // Trigger once on mount to establish initial validity
-    onChange(getValues(), isValid);
-    return () => subscription.unsubscribe();
-  }, [watch, onChange, getValues, isValid]);
+    onChange(getValues(), isValid)
+    return () => subscription.unsubscribe()
+  }, [watch, onChange, getValues, isValid])
 
   return (
     <div className="space-y-6 max-w-4xl">
       <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Dados da Entrevista</h2>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Data da Entrevista *</label>
@@ -49,7 +49,9 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
             max={new Date().toISOString().split('T')[0]} // bloqueia datas futuras no HTML também
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
-          {errors.interviewDate && <p className="mt-1 text-sm text-red-600">{errors.interviewDate.message}</p>}
+          {errors.interviewDate && (
+            <p className="mt-1 text-sm text-red-600">{errors.interviewDate.message}</p>
+          )}
         </div>
 
         <div>
@@ -81,7 +83,9 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             placeholder="Nome do entrevistado"
           />
-          {errors.interviewee && <p className="mt-1 text-sm text-red-600">{errors.interviewee.message}</p>}
+          {errors.interviewee && (
+            <p className="mt-1 text-sm text-red-600">{errors.interviewee.message}</p>
+          )}
         </div>
 
         <div>
@@ -92,7 +96,9 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             placeholder="Ex: Mãe, Pai, Avó"
           />
-          {errors.relationship && <p className="mt-1 text-sm text-red-600">{errors.relationship.message}</p>}
+          {errors.relationship && (
+            <p className="mt-1 text-sm text-red-600">{errors.relationship.message}</p>
+          )}
         </div>
       </div>
 
@@ -134,7 +140,9 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
         </div>
 
         <div>
-          <label htmlFor="location" className="block text-sm font-medium text-gray-700">Local</label>
+          <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+            Local
+          </label>
           <select
             id="location"
             {...register('location')}
@@ -155,13 +163,17 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
       {/* Condicionais Modality/Location */}
       {modality === 'domiciliar' && (
         <div>
-          <label className="block text-sm font-medium text-gray-700">Endereço/Identificação do local domiciliar *</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Endereço/Identificação do local domiciliar *
+          </label>
           <input
             type="text"
             {...register('modalityAddress')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
-          {errors.modalityAddress && <p className="mt-1 text-sm text-red-600">{errors.modalityAddress.message}</p>}
+          {errors.modalityAddress && (
+            <p className="mt-1 text-sm text-red-600">{errors.modalityAddress.message}</p>
+          )}
         </div>
       )}
 
@@ -174,7 +186,9 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             placeholder="Ex: Google Meet, Zoom, WhatsApp"
           />
-          {errors.modalityPlatform && <p className="mt-1 text-sm text-red-600">{errors.modalityPlatform.message}</p>}
+          {errors.modalityPlatform && (
+            <p className="mt-1 text-sm text-red-600">{errors.modalityPlatform.message}</p>
+          )}
         </div>
       )}
 
@@ -186,13 +200,17 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
             {...register('locationDescription')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
-          {errors.locationDescription && <p className="mt-1 text-sm text-red-600">{errors.locationDescription.message}</p>}
+          {errors.locationDescription && (
+            <p className="mt-1 text-sm text-red-600">{errors.locationDescription.message}</p>
+          )}
         </div>
       )}
 
       <div className="grid grid-cols-1 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Qualidade das informações</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Qualidade das informações
+          </label>
           <select
             {...register('informationQuality')}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -207,26 +225,33 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
 
         {(informationQuality === 'parcialmente adequada' || informationQuality === 'limitada') && (
           <div>
-            <label className="block text-sm font-medium text-gray-700">Justificativa da limitação *</label>
+            <label className="block text-sm font-medium text-gray-700">
+              Justificativa da limitação *
+            </label>
             <textarea
               {...register('informationLimitationReason')}
               rows={2}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             ></textarea>
-            {errors.informationLimitationReason && <p className="mt-1 text-sm text-red-600">{errors.informationLimitationReason.message}</p>}
+            {errors.informationLimitationReason && (
+              <p className="mt-1 text-sm text-red-600">
+                {errors.informationLimitationReason.message}
+              </p>
+            )}
           </div>
         )}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Observações gerais da entrevista</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Observações gerais da entrevista
+        </label>
         <textarea
           {...register('observations')}
           rows={3}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
         ></textarea>
       </div>
-
     </div>
-  );
+  )
 }

@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
-import { professionalProfileSchema, type ProfessionalProfileFormInputs } from '../../schemas/auth';
-import { createOrUpdateProfile } from '../../services/auth';
-import { useAuth } from '../../contexts/AuthContext';
-import { UserCircle } from 'lucide-react';
+import { useState, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from 'react-router-dom'
+import { professionalProfileSchema, type ProfessionalProfileFormInputs } from '../../schemas/auth'
+import { createOrUpdateProfile } from '../../services/auth'
+import { useAuth } from '../../contexts/AuthContext'
+import { UserCircle } from 'lucide-react'
 
 export default function ProfessionalProfile() {
-  const [error, setError] = useState<string | null>(null);
-  const { user, profile, refreshProfile } = useAuth();
-  const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null)
+  const { user, profile, refreshProfile } = useAuth()
+  const navigate = useNavigate()
 
   const {
     register,
@@ -19,7 +19,7 @@ export default function ProfessionalProfile() {
     formState: { errors, isSubmitting },
   } = useForm<ProfessionalProfileFormInputs>({
     resolver: zodResolver(professionalProfileSchema),
-  });
+  })
 
   useEffect(() => {
     if (profile) {
@@ -30,24 +30,26 @@ export default function ProfessionalProfile() {
         crefonoNumber: profile.crefonoNumber,
         crefonoState: profile.crefonoState,
         phone: profile.phone,
-      });
+      })
     }
-  }, [profile, reset]);
+  }, [profile, reset])
 
   const onSubmit = async (data: ProfessionalProfileFormInputs) => {
     try {
-      if (!user?.id) throw new Error('Usuário não autenticado');
-      
-      setError(null);
-      await createOrUpdateProfile(user.id, data);
-      await refreshProfile();
-      
-      navigate('/', { replace: true });
+      if (!user?.id) throw new Error('Usuário não autenticado')
+
+      setError(null)
+      await createOrUpdateProfile(user.id, data)
+      await refreshProfile()
+
+      navigate('/', { replace: true })
     } catch (err: any) {
-      console.error("Profile save error:", err);
-      setError(`Erro ao salvar perfil: ${err.message || 'Verifique sua conexão e tente novamente.'}`);
+      console.error('Profile save error:', err)
+      setError(
+        `Erro ao salvar perfil: ${err.message || 'Verifique sua conexão e tente novamente.'}`,
+      )
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -56,9 +58,7 @@ export default function ProfessionalProfile() {
           <div className="bg-blue-100 p-3 rounded-full mb-4">
             <UserCircle className="h-8 w-8 text-blue-600" />
           </div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
-            Perfil Profissional
-          </h2>
+          <h2 className="text-center text-3xl font-extrabold text-gray-900">Perfil Profissional</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Para continuar, preencha seus dados de fonoaudiólogo. O CREFONO é obrigatório.
           </p>
@@ -82,7 +82,9 @@ export default function ProfessionalProfile() {
                 {...register('fullName')}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
-              {errors.fullName && <p className="mt-1 text-sm text-red-600">{errors.fullName.message}</p>}
+              {errors.fullName && (
+                <p className="mt-1 text-sm text-red-600">{errors.fullName.message}</p>
+              )}
             </div>
 
             <div>
@@ -95,7 +97,9 @@ export default function ProfessionalProfile() {
                 {...register('professionalName')}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
-              {errors.professionalName && <p className="mt-1 text-sm text-red-600">{errors.professionalName.message}</p>}
+              {errors.professionalName && (
+                <p className="mt-1 text-sm text-red-600">{errors.professionalName.message}</p>
+              )}
             </div>
 
             <div>
@@ -122,7 +126,9 @@ export default function ProfessionalProfile() {
                 {...register('crefonoNumber')}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
-              {errors.crefonoNumber && <p className="mt-1 text-sm text-red-600">{errors.crefonoNumber.message}</p>}
+              {errors.crefonoNumber && (
+                <p className="mt-1 text-sm text-red-600">{errors.crefonoNumber.message}</p>
+              )}
             </div>
 
             <div>
@@ -137,7 +143,9 @@ export default function ProfessionalProfile() {
                 {...register('crefonoState')}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm uppercase"
               />
-              {errors.crefonoState && <p className="mt-1 text-sm text-red-600">{errors.crefonoState.message}</p>}
+              {errors.crefonoState && (
+                <p className="mt-1 text-sm text-red-600">{errors.crefonoState.message}</p>
+              )}
             </div>
 
             <div className="sm:col-span-2">
@@ -166,5 +174,5 @@ export default function ProfessionalProfile() {
         </form>
       </div>
     </div>
-  );
+  )
 }

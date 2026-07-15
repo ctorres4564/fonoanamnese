@@ -1,21 +1,27 @@
-﻿import { describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { SpeechDevelopmentSection } from '../../../../domains/anamnesis/speech/components/SpeechDevelopmentSection';
+﻿import { describe, it, expect, vi } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
+import { SpeechDevelopmentSection } from '../../../../domains/anamnesis/speech/components/SpeechDevelopmentSection'
 
 describe('SpeechDevelopmentSection Components', () => {
   it('should render main sections and basic fields', () => {
-    const handleChange = vi.fn();
-    render(<SpeechDevelopmentSection onChange={handleChange} />);
-    
-    expect(screen.getByText('Esta seção avalia o desenvolvimento da fala, clareza, aspectos fonológicos, motores e o impacto funcional.')).toBeInTheDocument();
-    expect(screen.getByText('3. Alterações de Fala Relatadas e Padrões')).toBeInTheDocument();
-    expect(screen.getByText('8. Histórico Familiar e Intervenções')).toBeInTheDocument();
-    expect(screen.getByText('Síntese e Encaminhamentos (Exclusivo do Avaliador)')).toBeInTheDocument();
-  });
+    const handleChange = vi.fn()
+    render(<SpeechDevelopmentSection onChange={handleChange} />)
+
+    expect(
+      screen.getByText(
+        'Esta seção avalia o desenvolvimento da fala, clareza, aspectos fonológicos, motores e o impacto funcional.',
+      ),
+    ).toBeInTheDocument()
+    expect(screen.getByText('3. Alterações de Fala Relatadas e Padrões')).toBeInTheDocument()
+    expect(screen.getByText('8. Histórico Familiar e Intervenções')).toBeInTheDocument()
+    expect(
+      screen.getByText('Síntese e Encaminhamentos (Exclusivo do Avaliador)'),
+    ).toBeInTheDocument()
+  })
 
   it('should call onChange with valid data when all required fields are filled', async () => {
-    const handleChange = vi.fn();
-    
+    const handleChange = vi.fn()
+
     // Mount with partial initial data to pass schema validation easily
     const initialData: any = {
       history: {
@@ -32,7 +38,7 @@ describe('SpeechDevelopmentSection Components', () => {
           forOtherFamily: 'totalmente_inteligivel',
           forTeachers: 'totalmente_inteligivel',
           forPeers: 'totalmente_inteligivel',
-          forStrangers: 'totalmente_inteligivel'
+          forStrangers: 'totalmente_inteligivel',
         },
         context: {
           isolatedWords: 'totalmente_inteligivel',
@@ -42,14 +48,14 @@ describe('SpeechDevelopmentSection Components', () => {
           anxiousOrExcited: 'totalmente_inteligivel',
           needsRepetition: 'nunca',
           needsInterpretation: 'nunca',
-          showsFrustration: 'nunca'
-        }
+          showsFrustration: 'nunca',
+        },
       },
       reportedErrors: {
         types: [],
         positionInWord: 'inicio',
         frequency: 'nunca',
-        consistency: 'nunca'
+        consistency: 'nunca',
       },
       consistency: {
         sameWordSameWay: 'nunca',
@@ -65,7 +71,7 @@ describe('SpeechDevelopmentSection Components', () => {
         usesGesturesToCompensate: 'nunca',
         needsVisualModel: 'nunca',
         needsRepetition: 'nunca',
-        needsSyllableSegmentation: 'nunca'
+        needsSyllableSegmentation: 'nunca',
       },
       motorAspects: {
         difficultyImitatingMouth: 'ausente',
@@ -83,12 +89,12 @@ describe('SpeechDevelopmentSection Components', () => {
         betterSpontaneousSpeech: 'ausente',
         speechBreathingCoordination: 'ausente',
         fatigueDuringProlongedSpeech: 'ausente',
-        needsSpecificEvaluation: false
+        needsSpecificEvaluation: false,
       },
       rateAndRhythm: {
         rate: 'adequada',
         rhythm: 'aparentemente_adequado',
-        articulatoryPrecision: 'adequada'
+        articulatoryPrecision: 'adequada',
       },
       functionalImpact: {
         difficultyUnderstoodAtHome: 'ausente',
@@ -105,7 +111,7 @@ describe('SpeechDevelopmentSection Components', () => {
         readingWritingImpact: 'ausente',
         autonomyImpact: 'ausente',
         socialImpact: 'ausente',
-        schoolImpact: 'ausente'
+        schoolImpact: 'ausente',
       },
       familyHistory: {
         hasSpeechDifficulty: false,
@@ -113,27 +119,26 @@ describe('SpeechDevelopmentSection Components', () => {
         hasStuttering: false,
         hasHearingAlteration: false,
         hasReadingWritingDifficulty: false,
-        notInformed: false
+        notInformed: false,
       },
       interventions: {
         previousEvaluation: 'nao',
         hasDocument: 'nao',
         previousTherapy: 'nao',
-        currentTherapy: 'nao'
+        currentTherapy: 'nao',
       },
       sample: {
         sampleTaken: 'nao',
-        needsSpecificEvaluation: false
-      }
-    };
+        needsSpecificEvaluation: false,
+      },
+    }
 
-    render(<SpeechDevelopmentSection initialData={initialData} onChange={handleChange} />);
-    
+    render(<SpeechDevelopmentSection initialData={initialData} onChange={handleChange} />)
+
     // Esperamos que o isValid seja disparado como true, porque provemos dados default vÃ¡lidos.
     await waitFor(() => {
       // onChange é chamado com a inicialização
-      expect(handleChange).toHaveBeenCalledWith(expect.anything(), true);
-    });
-  });
-});
-
+      expect(handleChange).toHaveBeenCalledWith(expect.anything(), true)
+    })
+  })
+})

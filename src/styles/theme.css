@@ -162,7 +162,6 @@ input[type='password']:focus {
     hsla(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l), 0.2) !important;
 }
 
-
 /* Botoes base */
 .dark .bg-white.text-gray-600 {
   background-color: #374151 !important;

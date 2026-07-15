@@ -1,5 +1,5 @@
-﻿import { describe, it, expect } from 'vitest';
-import { speechDevelopmentSchema } from '../../../../domains/anamnesis/speech/schema';
+﻿import { describe, it, expect } from 'vitest'
+import { speechDevelopmentSchema } from '../../../../domains/anamnesis/speech/schema'
 
 describe('SpeechDevelopmentSchema', () => {
   it('should validate a complete valid object', () => {
@@ -14,7 +14,7 @@ describe('SpeechDevelopmentSchema', () => {
         evolutionStatus: 'estavel',
         onsetMode: 'gradual',
         familyExamples: '',
-        observations: ''
+        observations: '',
       },
       intelligibility: {
         levels: {
@@ -22,7 +22,7 @@ describe('SpeechDevelopmentSchema', () => {
           forOtherFamily: 'predominantemente_inteligivel',
           forTeachers: 'parcialmente_inteligivel',
           forPeers: 'pouco_inteligivel',
-          forStrangers: 'nao_inteligivel'
+          forStrangers: 'nao_inteligivel',
         },
         context: {
           isolatedWords: 'totalmente_inteligivel',
@@ -32,14 +32,14 @@ describe('SpeechDevelopmentSchema', () => {
           anxiousOrExcited: 'totalmente_inteligivel',
           needsRepetition: 'nunca',
           needsInterpretation: 'nunca',
-          showsFrustration: 'nunca'
-        }
+          showsFrustration: 'nunca',
+        },
       },
       reportedErrors: {
         types: [],
         positionInWord: 'inicio',
         frequency: 'nunca',
-        consistency: 'nunca'
+        consistency: 'nunca',
       },
       phonologicalPatterns: [],
       soundClasses: [],
@@ -57,7 +57,7 @@ describe('SpeechDevelopmentSchema', () => {
         usesGesturesToCompensate: 'nunca',
         needsVisualModel: 'nunca',
         needsRepetition: 'nunca',
-        needsSyllableSegmentation: 'nunca'
+        needsSyllableSegmentation: 'nunca',
       },
       motorAspects: {
         difficultyImitatingMouth: 'ausente',
@@ -75,12 +75,12 @@ describe('SpeechDevelopmentSchema', () => {
         betterSpontaneousSpeech: 'ausente',
         speechBreathingCoordination: 'ausente',
         fatigueDuringProlongedSpeech: 'ausente',
-        needsSpecificEvaluation: false
+        needsSpecificEvaluation: false,
       },
       rateAndRhythm: {
         rate: 'adequada',
         rhythm: 'aparentemente_adequado',
-        articulatoryPrecision: 'adequada'
+        articulatoryPrecision: 'adequada',
       },
       functionalImpact: {
         difficultyUnderstoodAtHome: 'ausente',
@@ -97,7 +97,7 @@ describe('SpeechDevelopmentSchema', () => {
         readingWritingImpact: 'ausente',
         autonomyImpact: 'ausente',
         socialImpact: 'ausente',
-        schoolImpact: 'ausente'
+        schoolImpact: 'ausente',
       },
       familyHistory: {
         hasSpeechDifficulty: false,
@@ -105,27 +105,27 @@ describe('SpeechDevelopmentSchema', () => {
         hasStuttering: false,
         hasHearingAlteration: false,
         hasReadingWritingDifficulty: false,
-        notInformed: false
+        notInformed: false,
       },
       interventions: {
         previousEvaluation: 'nao',
         hasDocument: 'nao',
         previousTherapy: 'nao',
-        currentTherapy: 'nao'
+        currentTherapy: 'nao',
       },
       sample: {
         sampleTaken: 'nao',
-        needsSpecificEvaluation: false
+        needsSpecificEvaluation: false,
       },
       needsPhonologicalEvaluation: false,
       needsArticulatoryEvaluation: false,
       needsMotorSpeechEvaluation: false,
-      needsHearingEvaluation: false
-    };
+      needsHearingEvaluation: false,
+    }
 
-    const result = speechDevelopmentSchema.safeParse(validData);
-    expect(result.success).toBe(true);
-  });
+    const result = speechDevelopmentSchema.safeParse(validData)
+    expect(result.success).toBe(true)
+  })
 
   it('should invalidate history when regressionDescription is missing and developmentPerception is houve_regressao', () => {
     const data = {
@@ -140,7 +140,7 @@ describe('SpeechDevelopmentSchema', () => {
           forOtherFamily: 'totalmente_inteligivel',
           forTeachers: 'totalmente_inteligivel',
           forPeers: 'totalmente_inteligivel',
-          forStrangers: 'totalmente_inteligivel'
+          forStrangers: 'totalmente_inteligivel',
         },
         context: {
           isolatedWords: 'totalmente_inteligivel',
@@ -150,14 +150,14 @@ describe('SpeechDevelopmentSchema', () => {
           anxiousOrExcited: 'totalmente_inteligivel',
           needsRepetition: 'nunca',
           needsInterpretation: 'nunca',
-          showsFrustration: 'nunca'
-        }
+          showsFrustration: 'nunca',
+        },
       },
       reportedErrors: {
         types: [],
         positionInWord: 'inicio',
         frequency: 'nunca',
-        consistency: 'nunca'
+        consistency: 'nunca',
       },
       consistency: {
         sameWordSameWay: 'nunca',
@@ -173,7 +173,7 @@ describe('SpeechDevelopmentSchema', () => {
         usesGesturesToCompensate: 'nunca',
         needsVisualModel: 'nunca',
         needsRepetition: 'nunca',
-        needsSyllableSegmentation: 'nunca'
+        needsSyllableSegmentation: 'nunca',
       },
       motorAspects: {
         difficultyImitatingMouth: 'ausente',
@@ -191,12 +191,12 @@ describe('SpeechDevelopmentSchema', () => {
         betterSpontaneousSpeech: 'ausente',
         speechBreathingCoordination: 'ausente',
         fatigueDuringProlongedSpeech: 'ausente',
-        needsSpecificEvaluation: false
+        needsSpecificEvaluation: false,
       },
       rateAndRhythm: {
         rate: 'adequada',
         rhythm: 'aparentemente_adequado',
-        articulatoryPrecision: 'adequada'
+        articulatoryPrecision: 'adequada',
       },
       functionalImpact: {
         difficultyUnderstoodAtHome: 'ausente',
@@ -213,7 +213,7 @@ describe('SpeechDevelopmentSchema', () => {
         readingWritingImpact: 'ausente',
         autonomyImpact: 'ausente',
         socialImpact: 'ausente',
-        schoolImpact: 'ausente'
+        schoolImpact: 'ausente',
       },
       familyHistory: {
         hasSpeechDifficulty: false,
@@ -221,30 +221,30 @@ describe('SpeechDevelopmentSchema', () => {
         hasStuttering: false,
         hasHearingAlteration: false,
         hasReadingWritingDifficulty: false,
-        notInformed: false
+        notInformed: false,
       },
       interventions: {
         previousEvaluation: 'nao',
         hasDocument: 'nao',
         previousTherapy: 'nao',
-        currentTherapy: 'nao'
+        currentTherapy: 'nao',
       },
       sample: {
         sampleTaken: 'nao',
-        needsSpecificEvaluation: false
-      }
-    };
+        needsSpecificEvaluation: false,
+      },
+    }
 
-    const result = speechDevelopmentSchema.safeParse(data);
-    expect(result.success).toBe(false);
+    const result = speechDevelopmentSchema.safeParse(data)
+    expect(result.success).toBe(false)
     if (!result.success) {
       expect(result.error.issues).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({ message: 'Descrição da regressão é obrigatória' })
-        ])
-      );
+          expect.objectContaining({ message: 'Descrição da regressão é obrigatória' }),
+        ]),
+      )
     }
-  });
+  })
 
   it('should invalidate when onsetMode is outro and no description is provided', () => {
     const data = {
@@ -253,18 +253,18 @@ describe('SpeechDevelopmentSchema', () => {
         evolutionStatus: 'estavel',
         onsetMode: 'outro',
         otherOnsetModeDescription: '',
-      }
-    };
-    const result = speechDevelopmentSchema.safeParse(data);
-    expect(result.success).toBe(false);
+      },
+    }
+    const result = speechDevelopmentSchema.safeParse(data)
+    expect(result.success).toBe(false)
     if (!result.success) {
       expect(result.error.issues).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({ message: 'Descrição do outro modo de início é obrigatória' })
-        ])
-      );
+          expect.objectContaining({ message: 'Descrição do outro modo de início é obrigatória' }),
+        ]),
+      )
     }
-  });
+  })
 
   it('should invalidate when reported error type includes outra and no description is provided', () => {
     const data = {
@@ -272,37 +272,35 @@ describe('SpeechDevelopmentSchema', () => {
         types: ['outra'],
         positionInWord: 'inicio',
         frequency: 'nunca',
-        consistency: 'nunca'
-      }
-    };
-    const result = speechDevelopmentSchema.safeParse(data);
-    expect(result.success).toBe(false);
+        consistency: 'nunca',
+      },
+    }
+    const result = speechDevelopmentSchema.safeParse(data)
+    expect(result.success).toBe(false)
     if (!result.success) {
       expect(result.error.issues).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({ message: 'Descrição da outra alteração é obrigatória' })
-        ])
-      );
+          expect.objectContaining({ message: 'Descrição da outra alteração é obrigatória' }),
+        ]),
+      )
     }
-  });
+  })
 
   it('should invalidate when sample type is outra and no description is provided', () => {
     const data = {
       sample: {
         sampleTaken: 'sim',
         sampleType: 'outra',
-      }
-    };
-    const result = speechDevelopmentSchema.safeParse(data);
-    expect(result.success).toBe(false);
+      },
+    }
+    const result = speechDevelopmentSchema.safeParse(data)
+    expect(result.success).toBe(false)
     if (!result.success) {
       expect(result.error.issues).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({ message: 'Descrição do outro tipo de amostra é obrigatória' })
-        ])
-      );
+          expect.objectContaining({ message: 'Descrição do outro tipo de amostra é obrigatória' }),
+        ]),
+      )
     }
-  });
-});
-
-
+  })
+})

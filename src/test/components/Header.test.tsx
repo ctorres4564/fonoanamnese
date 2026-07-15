@@ -1,7 +1,7 @@
-import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { Header } from '../../components/Header'
+import { MemoryRouter } from 'react-router-dom'
 
 describe('Header Component', () => {
   beforeEach(() => {
@@ -15,12 +15,20 @@ describe('Header Component', () => {
   })
 
   it('renders FonoAnamnese title', () => {
-    render(<Header />)
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>,
+    )
     expect(screen.getByText('FonoAnamnese')).toBeInTheDocument()
   })
 
   it('toggles dark class on documentElement and stores in localStorage when clicked', () => {
-    render(<Header />)
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>,
+    )
     const button = screen.getByRole('button', { name: /toggle dark mode/i })
 
     // Default: light mode (no dark class, no storage value)
@@ -41,8 +49,13 @@ describe('Header Component', () => {
     // Add dark class to documentElement before rendering
     document.documentElement.classList.add('dark')
 
-    render(<Header />)
+    render(
+      <MemoryRouter>
+        <Header />
+      </MemoryRouter>,
+    )
     const button = screen.getByRole('button', { name: /toggle dark mode/i })
+
 
     // Clicking should toggle it to light mode since it started as dark
     fireEvent.click(button)
@@ -50,3 +63,4 @@ describe('Header Component', () => {
     expect(localStorage.getItem('theme')).toBe('light')
   })
 })
+

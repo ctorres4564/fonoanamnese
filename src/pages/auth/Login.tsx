@@ -1,16 +1,16 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { loginSchema, type LoginFormInputs } from '../../schemas/auth';
-import { loginUser } from '../../services/auth';
-import { HeartPulse } from 'lucide-react';
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { loginSchema, type LoginFormInputs } from '../../schemas/auth'
+import { loginUser } from '../../services/auth'
+import { HeartPulse } from 'lucide-react'
 
 export default function Login() {
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
+  const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/'
 
   const {
     register,
@@ -18,21 +18,25 @@ export default function Login() {
     formState: { errors, isSubmitting },
   } = useForm<LoginFormInputs>({
     resolver: zodResolver(loginSchema),
-  });
+  })
 
   const onSubmit = async (data: LoginFormInputs) => {
     try {
-      setError(null);
-      await loginUser(data);
-      navigate(from, { replace: true });
+      setError(null)
+      await loginUser(data)
+      navigate(from, { replace: true })
     } catch (err: any) {
-      if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
-        setError('E-mail ou senha incorretos.');
+      if (
+        err.code === 'auth/invalid-credential' ||
+        err.code === 'auth/user-not-found' ||
+        err.code === 'auth/wrong-password'
+      ) {
+        setError('E-mail ou senha incorretos.')
       } else {
-        setError('Ocorreu um erro ao tentar fazer login. Tente novamente mais tarde.');
+        setError('Ocorreu um erro ao tentar fazer login. Tente novamente mais tarde.')
       }
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -41,12 +45,8 @@ export default function Login() {
           <div className="bg-blue-100 p-3 rounded-full mb-4">
             <HeartPulse className="h-8 w-8 text-blue-600" />
           </div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
-            FonoAnamnese
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Acesse sua conta para continuar
-          </p>
+          <h2 className="text-center text-3xl font-extrabold text-gray-900">FonoAnamnese</h2>
+          <p className="mt-2 text-center text-sm text-gray-600">Acesse sua conta para continuar</p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -80,7 +80,9 @@ export default function Login() {
                 {...register('password')}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
-              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+              )}
             </div>
           </div>
 
@@ -113,5 +115,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-  );
+  )
 }

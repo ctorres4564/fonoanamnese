@@ -1,38 +1,42 @@
-import { useFormContext } from 'react-hook-form';
-import type { MotorDevelopmentSection } from '../..';
+import { useFormContext } from 'react-hook-form'
+import type { MotorDevelopmentSection } from '../..'
 
 interface MotorMilestoneFieldProps {
-  namePath: string; // e.g. "motorDevelopment.milestones.cervicalControl"
-  label: string;
+  namePath: string // e.g. "motorDevelopment.milestones.cervicalControl"
+  label: string
 }
 
 export function MotorMilestoneField({ namePath, label }: MotorMilestoneFieldProps) {
-  const { register, watch, formState: { errors } } = useFormContext<{ motorDevelopment: MotorDevelopmentSection }>();
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useFormContext<{ motorDevelopment: MotorDevelopmentSection }>()
 
   // Extract path properly to avoid typings error or just use simple watch if we know it works.
-  const status = watch(`${namePath}.status` as any);
+  const status = watch(`${namePath}.status` as any)
 
   const getError = (fieldName: string) => {
-    const keys = fieldName.split('.');
-    let current: any = errors;
+    const keys = fieldName.split('.')
+    let current: any = errors
     for (const key of keys) {
-      if (!current || !current[key]) return undefined;
-      current = current[key];
+      if (!current || !current[key]) return undefined
+      current = current[key]
     }
-    return current?.message;
-  };
+    return current?.message
+  }
 
-  const statusError = getError(`${namePath}.status`);
-  const ageError = getError(`${namePath}.acquisitionAgeMonths`);
+  const statusError = getError(`${namePath}.status`)
+  const ageError = getError(`${namePath}.acquisitionAgeMonths`)
 
   return (
     <div className="bg-white p-4 rounded-lg border border-gray-200 space-y-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <h4 className="font-medium text-gray-800 w-full md:w-1/3">{label}</h4>
-        
+
         <div className="w-full md:w-2/3">
           <label className="sr-only">Status</label>
-          <select 
+          <select
             {...register(`${namePath}.status` as any)}
             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           >
@@ -51,8 +55,8 @@ export function MotorMilestoneField({ namePath, label }: MotorMilestoneFieldProp
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-100">
           <div>
             <label className="block text-sm font-medium text-gray-700">Idade em meses</label>
-            <input 
-              type="number" 
+            <input
+              type="number"
               {...register(`${namePath}.acquisitionAgeMonths` as any, { valueAsNumber: true })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               placeholder="Ex: 6"
@@ -60,9 +64,11 @@ export function MotorMilestoneField({ namePath, label }: MotorMilestoneFieldProp
             {ageError && <p className="mt-1 text-sm text-red-600">{ageError as string}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Idade aproximada (descrição)</label>
-            <input 
-              type="text" 
+            <label className="block text-sm font-medium text-gray-700">
+              Idade aproximada (descrição)
+            </label>
+            <input
+              type="text"
               {...register(`${namePath}.acquisitionAgeDescription` as any)}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               placeholder="Ex: Por volta de 1 ano e meio"
@@ -70,7 +76,7 @@ export function MotorMilestoneField({ namePath, label }: MotorMilestoneFieldProp
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Modo de aquisição</label>
-            <select 
+            <select
               {...register(`${namePath}.acquisitionMode` as any)}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             >
@@ -83,8 +89,8 @@ export function MotorMilestoneField({ namePath, label }: MotorMilestoneFieldProp
           </div>
           <div className="md:col-span-2 lg:col-span-3">
             <label className="block text-sm font-medium text-gray-700">Observações</label>
-            <input 
-              type="text" 
+            <input
+              type="text"
               {...register(`${namePath}.observations` as any)}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
@@ -92,5 +98,5 @@ export function MotorMilestoneField({ namePath, label }: MotorMilestoneFieldProp
         </div>
       )}
     </div>
-  );
+  )
 }

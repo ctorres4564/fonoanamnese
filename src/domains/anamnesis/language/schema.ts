@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 import {
   LANGUAGE_SKILL_STATUS,
   LANGUAGE_SUPPORT_TYPES,
@@ -6,25 +6,27 @@ import {
   COMMUNICATION_FORMS,
   LANGUAGE_DIFFICULTIES_OPTIONS,
   REGRESSION_ONSET_MODES,
-  YES_NO_OPTIONS
-} from './constants';
+  YES_NO_OPTIONS,
+} from './constants'
 
-export const languageSkillObservationSchema = z.object({
-  status: z.enum(LANGUAGE_SKILL_STATUS).optional(),
-  observation: z.string().optional(),
-  context: z.string().optional(),
-  needsSupport: z.enum(YES_NO_OPTIONS).optional(),
-  supportType: z.array(z.enum(LANGUAGE_SUPPORT_TYPES)).optional(),
-  otherSupportDescription: z.string().optional(),
-}).superRefine((data, ctx) => {
-  if (data.supportType?.includes('outro') && !data.otherSupportDescription?.trim()) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'Descreva o outro tipo de apoio.',
-      path: ['otherSupportDescription']
-    });
-  }
-});
+export const languageSkillObservationSchema = z
+  .object({
+    status: z.enum(LANGUAGE_SKILL_STATUS).optional(),
+    observation: z.string().optional(),
+    context: z.string().optional(),
+    needsSupport: z.enum(YES_NO_OPTIONS).optional(),
+    supportType: z.array(z.enum(LANGUAGE_SUPPORT_TYPES)).optional(),
+    otherSupportDescription: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.supportType?.includes('outro') && !data.otherSupportDescription?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Descreva o outro tipo de apoio.',
+        path: ['otherSupportDescription'],
+      })
+    }
+  })
 
 export const receptiveLanguageSchema = z.object({
   respondsToName: languageSkillObservationSchema.optional(),
@@ -69,7 +71,7 @@ export const receptiveLanguageSchema = z.object({
   familyPerception: z.string().optional(),
   examples: z.string().optional(),
   professionalObservations: z.string().optional(),
-});
+})
 
 export const expressiveLanguageSchema = z.object({
   communicatesNeeds: languageSkillObservationSchema.optional(),
@@ -80,16 +82,16 @@ export const expressiveLanguageSchema = z.object({
   makesComments: languageSkillObservationSchema.optional(),
   answersQuestions: languageSkillObservationSchema.optional(),
   asksQuestions: languageSkillObservationSchema.optional(),
-  
+
   namesPeople: languageSkillObservationSchema.optional(),
   namesObjects: languageSkillObservationSchema.optional(),
   namesActions: languageSkillObservationSchema.optional(),
-  
+
   usesIsolatedWords: languageSkillObservationSchema.optional(),
   combinesTwoWords: languageSkillObservationSchema.optional(),
   usesSimpleSentences: languageSkillObservationSchema.optional(),
   usesComplexSentences: languageSkillObservationSchema.optional(),
-  
+
   usesVerbs: languageSkillObservationSchema.optional(),
   usesPronouns: languageSkillObservationSchema.optional(),
   usesArticles: languageSkillObservationSchema.optional(),
@@ -97,7 +99,7 @@ export const expressiveLanguageSchema = z.object({
   usesPlural: languageSkillObservationSchema.optional(),
   usesGenderFlexion: languageSkillObservationSchema.optional(),
   usesTenseFlexion: languageSkillObservationSchema.optional(),
-  
+
   reportsEvents: languageSkillObservationSchema.optional(),
   describesObjects: languageSkillObservationSchema.optional(),
   describesImages: languageSkillObservationSchema.optional(),
@@ -106,11 +108,11 @@ export const expressiveLanguageSchema = z.object({
   changesTopicAppropriately: languageSkillObservationSchema.optional(),
   initiatesConversation: languageSkillObservationSchema.optional(),
   endsConversation: languageSkillObservationSchema.optional(),
-  
+
   asksForHelp: languageSkillObservationSchema.optional(),
   clarifiesWhenMisunderstood: languageSkillObservationSchema.optional(),
   reformulatesMessage: languageSkillObservationSchema.optional(),
-  
+
   usesSpontaneousLanguage: languageSkillObservationSchema.optional(),
   dependsOnQuestionsToRespond: languageSkillObservationSchema.optional(),
   usesPredominantlyRepetitiveSpeech: languageSkillObservationSchema.optional(),
@@ -120,21 +122,27 @@ export const expressiveLanguageSchema = z.object({
   usesJargon: languageSkillObservationSchema.optional(),
   hasDifficultyFindingWords: languageSkillObservationSchema.optional(),
   hasFrequentPauses: languageSkillObservationSchema.optional(),
-});
+})
 
 export const sentenceDevelopmentSchema = z.object({
   predominantForm: z.enum(COMMUNICATION_FORMS).optional(),
-  perceivedAverageLength: z.number().min(0, "A extensão não pode ser negativa").optional(),
-  approximateWordsPerSentence: z.number().min(0, "O número de palavras não pode ser negativo").optional(),
+  perceivedAverageLength: z.number().min(0, 'A extensão não pode ser negativa').optional(),
+  approximateWordsPerSentence: z
+    .number()
+    .min(0, 'O número de palavras não pode ser negativo')
+    .optional(),
   complexity: z.enum(SENTENCE_COMPLEXITY_OPTIONS).optional(),
   hasGrammaticalErrors: z.enum(YES_NO_OPTIONS).optional(),
   examples: z.string().optional(),
   functionalImpact: z.string().optional(),
-});
+})
 
 export const vocabularyHistorySchema = z.object({
-  estimatedComprehendedVocabulary: z.number().min(0, "O vocabulário não pode ser negativo").optional(),
-  estimatedProducedVocabulary: z.number().min(0, "O vocabulário não pode ser negativo").optional(),
+  estimatedComprehendedVocabulary: z
+    .number()
+    .min(0, 'O vocabulário não pode ser negativo')
+    .optional(),
+  estimatedProducedVocabulary: z.number().min(0, 'O vocabulário não pode ser negativo').optional(),
   nounVariety: z.enum(LANGUAGE_SKILL_STATUS).optional(),
   verbVariety: z.enum(LANGUAGE_SKILL_STATUS).optional(),
   adjectiveVariety: z.enum(LANGUAGE_SKILL_STATUS).optional(),
@@ -147,7 +155,7 @@ export const vocabularyHistorySchema = z.object({
   difficultyAccessingNames: z.enum(YES_NO_OPTIONS).optional(),
   restrictedToSpecificInterests: z.enum(YES_NO_OPTIONS).optional(),
   examples: z.string().optional(),
-});
+})
 
 export const narrativeDevelopmentSchema = z.object({
   reportsEventsInSequence: languageSkillObservationSchema.optional(),
@@ -168,7 +176,7 @@ export const narrativeDevelopmentSchema = z.object({
   hasUninformativeDiscourse: z.enum(YES_NO_OPTIONS).optional(),
   hasDisorganizedDiscourse: z.enum(YES_NO_OPTIONS).optional(),
   observationsAndExamples: z.string().optional(),
-});
+})
 
 export const functionalLanguageSchema = z.object({
   requests: languageSkillObservationSchema.optional(),
@@ -189,88 +197,94 @@ export const functionalLanguageSchema = z.object({
   autonomyImpact: z.string().optional(),
   schoolParticipationImpact: z.string().optional(),
   socialInteractionImpact: z.string().optional(),
-});
+})
 
-export const languageDifficultiesSchema = z.object({
-  reportedDifficulties: z.array(z.enum(LANGUAGE_DIFFICULTIES_OPTIONS)).optional(),
-  otherDifficultyDescription: z.string().optional(),
-  agePerceived: z.string().optional(),
-  evolution: z.string().optional(),
-  hardestSituations: z.string().optional(),
-  helpfulStrategies: z.string().optional(),
-  functionalImpact: z.string().optional(),
-  observations: z.string().optional(),
-}).superRefine((data, ctx) => {
-  if (data.reportedDifficulties?.includes('outra') && !data.otherDifficultyDescription?.trim()) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'Por favor, descreva a outra dificuldade.',
-      path: ['otherDifficultyDescription']
-    });
-  }
-});
-
-export const languageRegressionSchema = z.object({
-  hasRegression: z.enum(YES_NO_OPTIONS).optional(),
-  lostSkills: z.string().optional(),
-  wordLoss: z.enum(YES_NO_OPTIONS).optional(),
-  phraseLoss: z.enum(YES_NO_OPTIONS).optional(),
-  vocabularyReduction: z.enum(YES_NO_OPTIONS).optional(),
-  comprehensionLoss: z.enum(YES_NO_OPTIONS).optional(),
-  responseCapacityLoss: z.enum(YES_NO_OPTIONS).optional(),
-  narrativeCapacityLoss: z.enum(YES_NO_OPTIONS).optional(),
-  approximateAge: z.string().optional(),
-  onsetMode: z.enum(REGRESSION_ONSET_MODES).optional(),
-  otherOnsetModeDescription: z.string().optional(),
-  associatedContext: z.string().optional(),
-  partialRecovery: z.enum(YES_NO_OPTIONS).optional(),
-  totalRecovery: z.enum(YES_NO_OPTIONS).optional(),
-  professionalEvaluationPerformed: z.enum(YES_NO_OPTIONS).optional(),
-  observations: z.string().optional(),
-}).superRefine((data, ctx) => {
-  if (data.hasRegression === 'sim') {
-    if (!data.lostSkills?.trim()) {
+export const languageDifficultiesSchema = z
+  .object({
+    reportedDifficulties: z.array(z.enum(LANGUAGE_DIFFICULTIES_OPTIONS)).optional(),
+    otherDifficultyDescription: z.string().optional(),
+    agePerceived: z.string().optional(),
+    evolution: z.string().optional(),
+    hardestSituations: z.string().optional(),
+    helpfulStrategies: z.string().optional(),
+    functionalImpact: z.string().optional(),
+    observations: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.reportedDifficulties?.includes('outra') && !data.otherDifficultyDescription?.trim()) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'A habilidade perdida deve ser informada quando há regressão.',
-        path: ['lostSkills']
-      });
+        message: 'Por favor, descreva a outra dificuldade.',
+        path: ['otherDifficultyDescription'],
+      })
     }
-    if (!data.approximateAge?.trim()) {
+  })
+
+export const languageRegressionSchema = z
+  .object({
+    hasRegression: z.enum(YES_NO_OPTIONS).optional(),
+    lostSkills: z.string().optional(),
+    wordLoss: z.enum(YES_NO_OPTIONS).optional(),
+    phraseLoss: z.enum(YES_NO_OPTIONS).optional(),
+    vocabularyReduction: z.enum(YES_NO_OPTIONS).optional(),
+    comprehensionLoss: z.enum(YES_NO_OPTIONS).optional(),
+    responseCapacityLoss: z.enum(YES_NO_OPTIONS).optional(),
+    narrativeCapacityLoss: z.enum(YES_NO_OPTIONS).optional(),
+    approximateAge: z.string().optional(),
+    onsetMode: z.enum(REGRESSION_ONSET_MODES).optional(),
+    otherOnsetModeDescription: z.string().optional(),
+    associatedContext: z.string().optional(),
+    partialRecovery: z.enum(YES_NO_OPTIONS).optional(),
+    totalRecovery: z.enum(YES_NO_OPTIONS).optional(),
+    professionalEvaluationPerformed: z.enum(YES_NO_OPTIONS).optional(),
+    observations: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.hasRegression === 'sim') {
+      if (!data.lostSkills?.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'A habilidade perdida deve ser informada quando há regressão.',
+          path: ['lostSkills'],
+        })
+      }
+      if (!data.approximateAge?.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'A idade aproximada (ou não informado) é obrigatória.',
+          path: ['approximateAge'],
+        })
+      }
+    }
+    if (data.onsetMode === 'outro' && !data.otherOnsetModeDescription?.trim()) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'A idade aproximada (ou não informado) é obrigatória.',
-        path: ['approximateAge']
-      });
+        message: 'Por favor, descreva a outra forma de início.',
+        path: ['otherOnsetModeDescription'],
+      })
     }
-  }
-  if (data.onsetMode === 'outro' && !data.otherOnsetModeDescription?.trim()) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'Por favor, descreva a outra forma de início.',
-      path: ['otherOnsetModeDescription']
-    });
-  }
-});
+  })
 
-export const languageSupportStrategiesSchema = z.object({
-  supportsUsed: z.array(z.enum(LANGUAGE_SUPPORT_TYPES)).optional(),
-  otherSupportDescription: z.string().optional(),
-  mostEffectiveSupport: z.string().optional(),
-  whoUses: z.string().optional(),
-  environments: z.string().optional(),
-  frequency: z.string().optional(),
-  childResponse: z.string().optional(),
-  observations: z.string().optional(),
-}).superRefine((data, ctx) => {
-  if (data.supportsUsed?.includes('outro') && !data.otherSupportDescription?.trim()) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: 'Descreva o outro apoio.',
-      path: ['otherSupportDescription']
-    });
-  }
-});
+export const languageSupportStrategiesSchema = z
+  .object({
+    supportsUsed: z.array(z.enum(LANGUAGE_SUPPORT_TYPES)).optional(),
+    otherSupportDescription: z.string().optional(),
+    mostEffectiveSupport: z.string().optional(),
+    whoUses: z.string().optional(),
+    environments: z.string().optional(),
+    frequency: z.string().optional(),
+    childResponse: z.string().optional(),
+    observations: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.supportsUsed?.includes('outro') && !data.otherSupportDescription?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Descreva o outro apoio.',
+        path: ['otherSupportDescription'],
+      })
+    }
+  })
 
 export const languageReportVsObservationSchema = z.object({
   familyReportData: z.string().optional(),
@@ -278,7 +292,7 @@ export const languageReportVsObservationSchema = z.object({
   professionalInitialObservation: z.string().optional(),
   observationLimitations: z.string().optional(),
   needsComplementaryEvaluation: z.enum(YES_NO_OPTIONS).optional(),
-});
+})
 
 export const languageDevelopmentSchema = z.object({
   receptiveLanguage: receptiveLanguageSchema.optional(),
@@ -291,4 +305,4 @@ export const languageDevelopmentSchema = z.object({
   languageRegression: languageRegressionSchema.optional(),
   languageSupportStrategies: languageSupportStrategiesSchema.optional(),
   reportVsObservation: languageReportVsObservationSchema.optional(),
-});
+})

@@ -49,11 +49,23 @@ service cloud.firestore {
     }
     match /anamneses/{anamnesisId} {
       allow read: if request.auth != null && resource.data.professionalId == request.auth.uid;
-      allow create: if request.auth != null && request.resource.data.professionalId == request.auth.uid;
+      allow create: if request.auth != null 
+                    && request.resource.data.professionalId == request.auth.uid
+                    && (!('finalizedAt' in request.resource.data) || request.resource.data.finalizedAt == null);
       allow update: if request.auth != null 
                     && resource.data.professionalId == request.auth.uid 
-                    && request.resource.data.professionalId == request.auth.uid
-                    && request.resource.data.patientId == resource.data.patientId;
+                    && request.resource.data.professionalId == resource.data.professionalId
+                    && request.resource.data.patientId == resource.data.patientId
+                    && (!('status' in resource.data) || resource.data.status != 'finalized')
+                    && (
+                      (request.resource.data.status == 'finalized' && request.resource.data.finalizedAt == request.time)
+                      ||
+                      (
+                        (!('status' in request.resource.data) || request.resource.data.status != 'finalized')
+                        &&
+                        (!('finalizedAt' in request.resource.data) || request.resource.data.finalizedAt == null || request.resource.data.finalizedAt == resource.data.finalizedAt)
+                      )
+                    );
     }
 
     match /anamnesisVersions/{versionId} {

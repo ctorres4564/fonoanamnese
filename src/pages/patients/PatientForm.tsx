@@ -1,34 +1,39 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { createPatient, updatePatient, getPatientById } from '../../services/patientService';
-import { patientSchema, type PatientFormData } from '../../schemas/patient';
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
+import { createPatient, updatePatient, getPatientById } from '../../services/patientService'
+import { patientSchema, type PatientFormData } from '../../schemas/patient'
 
 interface PatientFormProps {
-  patientId?: string; // If provided, we are editing
+  patientId?: string // If provided, we are editing
 }
 
 export const PatientForm: React.FC<PatientFormProps> = ({ patientId }) => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [serverError, setServerError] = useState<string | null>(null);
-  const [loadingData, setLoadingData] = useState(!!patientId);
-  
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<PatientFormData>({
+  const { user } = useAuth()
+  const navigate = useNavigate()
+  const [serverError, setServerError] = useState<string | null>(null)
+  const [loadingData, setLoadingData] = useState(!!patientId)
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<PatientFormData>({
     resolver: zodResolver(patientSchema),
     defaultValues: {
       status: 'evaluation',
       isArchived: false,
-    }
-  });
+    },
+  })
 
   React.useEffect(() => {
     const loadData = async () => {
       if (patientId && user) {
         try {
-          const data = await getPatientById(patientId);
+          const data = await getPatientById(patientId)
           if (data && data.professionalId === user.id) {
             reset({
               fullName: data.fullName,
@@ -42,40 +47,40 @@ export const PatientForm: React.FC<PatientFormProps> = ({ patientId }) => {
               recordNumber: data.recordNumber,
               status: data.status,
               isArchived: data.isArchived,
-            });
+            })
           }
         } catch (e) {
-          console.error(e);
-          setServerError('Erro ao carregar paciente para edição.');
+          console.error(e)
+          setServerError('Erro ao carregar paciente para edição.')
         } finally {
-          setLoadingData(false);
+          setLoadingData(false)
         }
       }
-    };
-    loadData();
-  }, [patientId, user, reset]);
+    }
+    loadData()
+  }, [patientId, user, reset])
 
   const onSubmit = async (data: PatientFormData) => {
-    if (!user) return;
+    if (!user) return
     try {
-      setServerError(null);
+      setServerError(null)
       if (patientId) {
-        await updatePatient(patientId, data);
+        await updatePatient(patientId, data)
       } else {
         await createPatient({
           ...data,
-          professionalId: user.id
-        });
+          professionalId: user.id,
+        })
       }
-      navigate('/patients');
+      navigate('/patients')
     } catch (error) {
-      console.error(error);
-      setServerError('Erro ao cadastrar o paciente. Tente novamente.');
+      console.error(error)
+      setServerError('Erro ao cadastrar o paciente. Tente novamente.')
     }
-  };
+  }
 
   if (loadingData) {
-    return <div className="p-4 text-center">Carregando formulário...</div>;
+    return <div className="p-4 text-center">Carregando formulário...</div>
   }
 
   return (
@@ -83,40 +88,51 @@ export const PatientForm: React.FC<PatientFormProps> = ({ patientId }) => {
       <h1 className="text-2xl font-bold text-gray-900 mb-6">
         {patientId ? 'Editar Paciente' : 'Cadastrar Novo Paciente'}
       </h1>
-      
+
       {serverError && <div className="bg-red-50 text-red-600 p-3 rounded mb-4">{serverError}</div>}
-      
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        
         <div>
-          <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">Nome Completo</label>
+          <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
+            Nome Completo
+          </label>
           <input
             id="fullName"
             {...register('fullName')}
             className={`mt-1 block w-full p-2 border ${errors.fullName ? 'border-red-500' : 'border-gray-300'} rounded-md`}
           />
-          {errors.fullName && <span className="text-red-500 text-sm">{errors.fullName.message}</span>}
+          {errors.fullName && (
+            <span className="text-red-500 text-sm">{errors.fullName.message}</span>
+          )}
         </div>
 
         <div>
-          <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700">Data de Nascimento</label>
+          <label htmlFor="birthDate" className="block text-sm font-medium text-gray-700">
+            Data de Nascimento
+          </label>
           <input
             id="birthDate"
             type="date"
             {...register('birthDate')}
             className={`mt-1 block w-full p-2 border ${errors.birthDate ? 'border-red-500' : 'border-gray-300'} rounded-md`}
           />
-          {errors.birthDate && <span className="text-red-500 text-sm">{errors.birthDate.message}</span>}
+          {errors.birthDate && (
+            <span className="text-red-500 text-sm">{errors.birthDate.message}</span>
+          )}
         </div>
 
         <div>
-          <label htmlFor="recordNumber" className="block text-sm font-medium text-gray-700">Número do Prontuário</label>
+          <label htmlFor="recordNumber" className="block text-sm font-medium text-gray-700">
+            Número do Prontuário
+          </label>
           <input
             id="recordNumber"
             {...register('recordNumber')}
             className={`mt-1 block w-full p-2 border ${errors.recordNumber ? 'border-red-500' : 'border-gray-300'} rounded-md`}
           />
-          {errors.recordNumber && <span className="text-red-500 text-sm">{errors.recordNumber.message}</span>}
+          {errors.recordNumber && (
+            <span className="text-red-500 text-sm">{errors.recordNumber.message}</span>
+          )}
         </div>
 
         <div>
@@ -152,5 +168,5 @@ export const PatientForm: React.FC<PatientFormProps> = ({ patientId }) => {
         </div>
       </form>
     </div>
-  );
-};
+  )
+}

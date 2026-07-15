@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useNavigate } from 'react-router-dom';
-import { registerSchema, type RegisterFormInputs } from '../../schemas/auth';
-import { registerUser } from '../../services/auth';
-import { HeartPulse } from 'lucide-react';
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Link, useNavigate } from 'react-router-dom'
+import { registerSchema, type RegisterFormInputs } from '../../schemas/auth'
+import { registerUser } from '../../services/auth'
+import { HeartPulse } from 'lucide-react'
 
 export default function Register() {
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const {
     register,
@@ -16,24 +16,24 @@ export default function Register() {
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormInputs>({
     resolver: zodResolver(registerSchema),
-  });
+  })
 
   const onSubmit = async (data: RegisterFormInputs) => {
     try {
-      setError(null);
-      await registerUser(data);
+      setError(null)
+      await registerUser(data)
       // After registration, AuthContext will catch the user and redirect to profile setup
-      navigate('/profile/setup', { replace: true });
+      navigate('/profile/setup', { replace: true })
     } catch (err: any) {
       if (err.code === 'auth/email-already-in-use') {
-        setError('Este e-mail já está em uso.');
+        setError('Este e-mail já está em uso.')
       } else if (err.code === 'auth/weak-password') {
-        setError('A senha é muito fraca.');
+        setError('A senha é muito fraca.')
       } else {
-        setError('Ocorreu um erro ao criar a conta. Tente novamente.');
+        setError('Ocorreu um erro ao criar a conta. Tente novamente.')
       }
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -42,12 +42,8 @@ export default function Register() {
           <div className="bg-blue-100 p-3 rounded-full mb-4">
             <HeartPulse className="h-8 w-8 text-blue-600" />
           </div>
-          <h2 className="text-center text-3xl font-extrabold text-gray-900">
-            Criar Conta
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Junte-se ao FonoAnamnese
-          </p>
+          <h2 className="text-center text-3xl font-extrabold text-gray-900">Criar Conta</h2>
+          <p className="mt-2 text-center text-sm text-gray-600">Junte-se ao FonoAnamnese</p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -81,9 +77,11 @@ export default function Register() {
                 {...register('password')}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
-              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+              )}
             </div>
-            
+
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                 Confirmar Senha
@@ -94,7 +92,9 @@ export default function Register() {
                 {...register('confirmPassword')}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
-              {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>}
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+              )}
             </div>
           </div>
 
@@ -119,5 +119,5 @@ export default function Register() {
         </div>
       </div>
     </div>
-  );
+  )
 }

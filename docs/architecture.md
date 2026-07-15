@@ -81,6 +81,7 @@ sequenceDiagram
 ```
 
 ### Detalhes do Fluxo:
+
 1. **Autenticação**: O `ProtectedRoute.tsx` intercepta a renderização de rotas privadas. Se a sessão no `AuthContext` estiver ausente, o usuário é redirecionado para a página de `/login`.
 2. **Segurança de Acesso**: Todos os dados salvos possuem propriedade `professionalId`. As regras de segurança do Firestore garantem que um profissional logado só possa ler/escrever pacientes e anamneses que contenham o seu `professionalId`.
 
