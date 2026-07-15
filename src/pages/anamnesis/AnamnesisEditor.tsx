@@ -11,6 +11,7 @@ import { InterviewDataSection } from '../../domains/anamnesis/interview/componen
 import { ChiefComplaintSection } from '../../domains/anamnesis/chiefComplaint/components/ChiefComplaintSection';
 import { PregnancyBirthNeonatalSection } from '../../domains/anamnesis/pregnancy/components/PregnancyBirthNeonatalSection';
 import { MotorDevelopmentSection } from '../../domains/anamnesis/motor/components/MotorDevelopmentSection';
+import { CommunicationDevelopmentSection } from '../../domains/anamnesis/communication/components/CommunicationDevelopmentSection';
 import { calculateAnamnesisProgress } from '../../utils/progress';
 
 const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
@@ -18,6 +19,7 @@ const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
   { id: 'chiefComplaint', label: 'Queixa Principal' },
   { id: 'pregnancyBirthNeonatal', label: 'Gestação, Parto e Neonatal' },
   { id: 'motorDevelopment', label: 'Desenvolvimento Motor' },
+  { id: 'communicationDevelopment', label: 'Comunicação Inicial' },
 ];
 
 export default function AnamnesisEditor() {
@@ -172,8 +174,11 @@ export default function AnamnesisEditor() {
               onChange={handleSectionDataChange} 
             />
           )}
-          {!['interviewData', 'chiefComplaint', 'pregnancyBirthNeonatal', 'motorDevelopment'].includes(anamnesis.currentSection) && (
-            <p className="text-gray-500">Formulário clínico (placeholder) para a seção: {anamnesis.currentSection}</p>
+          {anamnesis.currentSection === 'communicationDevelopment' && (
+            <CommunicationDevelopmentSection 
+              initialData={anamnesis.sections?.communicationDevelopment} 
+              onChange={handleSectionDataChange} 
+            />
           )}
         </SectionContainer>
       </AnamnesisWizard>

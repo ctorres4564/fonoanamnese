@@ -18,6 +18,7 @@ export const updateAnamnesisSchema = z.object({
     chiefComplaint: z.any().optional(),
     pregnancyBirthNeonatal: z.any().optional(),
     motorDevelopment: z.any().optional(),
+    communicationDevelopment: z.any().optional(),
   }).optional(),
 });
 
