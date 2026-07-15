@@ -70,8 +70,8 @@ export const listAnamnesesByPatient = async (
   
   // Sort by updatedAt descending
   return results.sort((a, b) => {
-    const timeA = a.updatedAt?.toMillis?.() || new Date(a.updatedAt).getTime() || 0;
-    const timeB = b.updatedAt?.toMillis?.() || new Date(b.updatedAt).getTime() || 0;
+    const timeA = (a.updatedAt as any)?.toMillis?.() || new Date(a.updatedAt as any).getTime() || 0;
+    const timeB = (b.updatedAt as any)?.toMillis?.() || new Date(b.updatedAt as any).getTime() || 0;
     return timeB - timeA;
   });
 };
@@ -107,8 +107,8 @@ export const getLatestActiveAnamnesisByPatient = async (
 
   // Sort by updatedAt descending to get latest
   results.sort((a, b) => {
-    const timeA = a.updatedAt?.toMillis?.() || new Date(a.updatedAt).getTime() || 0;
-    const timeB = b.updatedAt?.toMillis?.() || new Date(b.updatedAt).getTime() || 0;
+    const timeA = (a.updatedAt as any)?.toMillis?.() || new Date(a.updatedAt as any).getTime() || 0;
+    const timeB = (b.updatedAt as any)?.toMillis?.() || new Date(b.updatedAt as any).getTime() || 0;
     return timeB - timeA;
   });
 
@@ -178,6 +178,16 @@ export const reopenAnamnesis = async (id: string, userId: string): Promise<void>
   await updateDoc(docRef, {
     isArchived: false,
     status: 'draft',
+    updatedAt: serverTimestamp(),
+    updatedBy: userId,
+  });
+};
+
+export const finalizeAnamnesis = async (id: string, userId: string): Promise<void> => {
+  const docRef = doc(db, COLLECTION_NAME, id);
+  await updateDoc(docRef, {
+    status: 'finalized',
+    finalizedAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
     updatedBy: userId,
   });

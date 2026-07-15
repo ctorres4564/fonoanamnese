@@ -131,4 +131,20 @@ describe('AnamnesisEditor Integration', () => {
     expect(updateArgs.sections.interviewData.interviewee).toBe('Mãe');
     expect(updateArgs.sections.interviewData.nonExistent).toBeUndefined();
   });
+
+  it('should show "Ir para revisão" when on the last section', async () => {
+    (anamnesisService.getAnamnesisById as any).mockResolvedValue({
+      ...mockAnamnesis,
+      currentSection: 'speechDevelopment' // A última seção
+    });
+
+    renderEditor();
+    
+    await waitFor(() => {
+      expect(screen.getByText('Ir para revisão')).toBeInTheDocument();
+    });
+    
+    // Ensure "Finalizar" is NOT present (the user requirement explicitly said it shouldn't use "Finalizar" in the editor)
+    expect(screen.queryByText('Finalizar')).not.toBeInTheDocument();
+  });
 });

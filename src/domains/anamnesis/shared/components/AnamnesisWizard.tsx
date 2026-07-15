@@ -86,7 +86,7 @@ export function AnamnesisWizard({
             onClick={onNext}
             className="px-4 py-2 text-sm font-medium rounded-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            {isLast ? 'Finalizar' : 'Próxima'}
+            {isLast ? 'Ir para revisão' : 'Próxima'}
           </button>
         </div>
       </main>
