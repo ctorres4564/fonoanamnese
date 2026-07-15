@@ -1,0 +1,36 @@
+/* src/styles/theme.css */
+:root {
+  /* Primary color (calm teal) */
+  --color-primary-h: 180;
+  --color-primary-s: 45%;
+  --color-primary-l: 45%;
+  /* Light mode background */
+  --color-bg-h: 0;
+  --color-bg-s: 0%;
+  --color-bg-l: 100%;
+  /* Dark mode background */
+  --color-bg-dark-h: 0;
+  --color-bg-dark-s: 0%;
+  --color-bg-dark-l: 10%;
+}
+
+/* Light mode utilities */
+.bg-primary {
+  background-color: hsl(var(--color-primary-h) var(--color-primary-s) var(--color-primary-l));
+}
+.text-primary {
+  color: hsl(var(--color-primary-h) var(--color-primary-s) var(--color-primary-l));
+}
+.bg-base {
+  background-color: hsl(var(--color-bg-h) var(--color-bg-s) var(--color-bg-l));
+}
+
+/* Dark mode overrides */
+.dark {
+  --color-bg-h: var(--color-bg-dark-h);
+  --color-bg-s: var(--color-bg-dark-s);
+  --color-bg-l: var(--color-bg-dark-l);
+}
+.dark .bg-base {
+  background-color: hsl(var(--color-bg-h) var(--color-bg-s) var(--color-bg-l));
+}
