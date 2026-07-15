@@ -95,7 +95,12 @@
 /* Formularios (Inputs, Selects, Textareas) - Modo Claro Padrao */
 input,
 select,
-textarea {
+textarea,
+input[type='text'],
+input[type='number'],
+input[type='date'],
+input[type='email'],
+input[type='password'] {
   background-color: #ffffff !important;
   color: #1f2937 !important; /* gray-900 para alto contraste */
   border-color: #d1d5db !important; /* gray-300 */
@@ -108,7 +113,12 @@ textarea::placeholder {
 
 input:focus,
 select:focus,
-textarea:focus {
+textarea:focus,
+input[type='text']:focus,
+input[type='number']:focus,
+input[type='date']:focus,
+input[type='email']:focus,
+input[type='password']:focus {
   outline: none;
   border-color: hsl(
     var(--color-primary-h) var(--color-primary-s) var(--color-primary-l)
@@ -120,7 +130,12 @@ textarea:focus {
 /* Modo Escuro (.dark) */
 .dark input,
 .dark select,
-.dark textarea {
+.dark textarea,
+.dark input[type='text'],
+.dark input[type='number'],
+.dark input[type='date'],
+.dark input[type='email'],
+.dark input[type='password'] {
   background-color: #1f2937 !important; /* gray-800 para consistencia com paineis */
   border-color: #4b5563 !important; /* gray-600 */
   color: #f9fafb !important; /* gray-50 para alto contraste */
@@ -133,7 +148,12 @@ textarea:focus {
 
 .dark input:focus,
 .dark select:focus,
-.dark textarea:focus {
+.dark textarea:focus,
+.dark input[type='text']:focus,
+.dark input[type='number']:focus,
+.dark input[type='date']:focus,
+.dark input[type='email']:focus,
+.dark input[type='password']:focus {
   outline: none;
   border-color: hsl(
     var(--color-primary-h) var(--color-primary-s) var(--color-primary-l)
@@ -157,4 +177,13 @@ textarea:focus {
 .dark .bg-gray-200.text-gray-800 {
   background-color: #4b5563 !important;
   color: #f3f4f6 !important;
+}
+
+/* Customizacao de campos de data (type="date") */
+input[type='date']::-webkit-datetime-edit {
+  color: inherit !important;
+}
+
+.dark input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1) !important;
 }
