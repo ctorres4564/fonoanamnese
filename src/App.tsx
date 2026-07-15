@@ -32,9 +32,7 @@ import {
   ArrowRight,
   Clock,
   Activity,
-  PlusCircle,
 } from 'lucide-react'
-
 
 // Dashboard Clínico do Fonoaudiólogo
 const Dashboard = () => {
@@ -78,7 +76,7 @@ const Dashboard = () => {
   ).length
   const reviewAnamnesesCount = anamneses.filter((a) => a.status === 'review').length
   const finalizedAnamnesesCount = anamneses.filter((a) => a.status === 'finalized').length
-  const alertsCount = anamneses.filter((a) => a.alerts && a.alerts.length > 0).length
+  const alertsCount = anamneses.filter((a) => (a as any).alerts && (a as any).alerts.length > 0).length
 
   // Obter pacientes recentes (ordenados por data de criacao descendente)
   const recentPatients = [...patients]
@@ -103,7 +101,6 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-4 sm:p-6 lg:p-8 transition-colors duration-200">
       <div className="max-w-6xl mx-auto space-y-8">
-        
         {/* Header de Boas-vindas */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 transition-colors gap-4">
           <div>
@@ -112,7 +109,10 @@ const Dashboard = () => {
             </h1>
             <p className="text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-2">
               <span className="inline-block w-2.5 h-2.5 rounded-full bg-teal-500 animate-pulse"></span>
-              CREFONO: {profile?.crefonoNumber ? `${profile.crefonoNumber} - ${profile.crefonoState || ''}` : 'Não cadastrado'}
+              CREFONO:{' '}
+              {profile?.crefonoNumber
+                ? `${profile.crefonoNumber} - ${profile.crefonoState || ''}`
+                : 'Não cadastrado'}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -146,8 +146,12 @@ const Dashboard = () => {
             <div>
               <p className="font-semibold text-sm">Perfil Profissional Incompleto</p>
               <p className="text-xs mt-0.5">
-                Para conseguir finalizar e emitir documentos de anamnese em PDF, você precisa preencher o número de registro do seu CREFONO. 
-                <Link to="/profile/setup" className="underline ml-1 font-medium hover:text-amber-900 dark:hover:text-amber-200">
+                Para conseguir finalizar e emitir documentos de anamnese em PDF, você precisa
+                preencher o número de registro do seu CREFONO.
+                <Link
+                  to="/profile/setup"
+                  className="underline ml-1 font-medium hover:text-amber-900 dark:hover:text-amber-200"
+                >
                   Completar perfil agora
                 </Link>
               </p>
@@ -159,65 +163,87 @@ const Dashboard = () => {
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <div className="bg-white dark:bg-gray-900 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 transition-colors flex flex-col justify-between min-h-[120px]">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Pacientes</span>
+              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Pacientes
+              </span>
               <div className="p-2 bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 rounded-xl">
                 <Users className="h-5 w-5" />
               </div>
             </div>
             <div className="mt-4">
-              <span className="text-2xl font-bold text-gray-900 dark:text-gray-50">{activePatientsCount}</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-gray-50">
+                {activePatientsCount}
+              </span>
               <p className="text-xs text-gray-400 dark:text-gray-550 mt-1">ativos no sistema</p>
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-900 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 transition-colors flex flex-col justify-between min-h-[120px]">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Rascunhos</span>
+              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Rascunhos
+              </span>
               <div className="p-2 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-xl">
                 <FileText className="h-5 w-5" />
               </div>
             </div>
             <div className="mt-4">
-              <span className="text-2xl font-bold text-gray-900 dark:text-gray-50">{draftAnamnesesCount}</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-gray-50">
+                {draftAnamnesesCount}
+              </span>
               <p className="text-xs text-gray-400 dark:text-gray-550 mt-1">em preenchimento</p>
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-900 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 transition-colors flex flex-col justify-between min-h-[120px]">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Revisão</span>
+              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Revisão
+              </span>
               <div className="p-2 bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 rounded-xl">
                 <Clock className="h-5 w-5" />
               </div>
             </div>
             <div className="mt-4">
-              <span className="text-2xl font-bold text-gray-900 dark:text-gray-50">{reviewAnamnesesCount}</span>
-              <p className="text-xs text-gray-400 dark:text-gray-550 mt-1">pendente de confirmacao</p>
+              <span className="text-2xl font-bold text-gray-900 dark:text-gray-50">
+                {reviewAnamnesesCount}
+              </span>
+              <p className="text-xs text-gray-400 dark:text-gray-550 mt-1">
+                pendente de confirmacao
+              </p>
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-900 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 transition-colors flex flex-col justify-between min-h-[120px]">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Finalizadas</span>
+              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Finalizadas
+              </span>
               <div className="p-2 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-xl">
                 <FileCheck className="h-5 w-5" />
               </div>
             </div>
             <div className="mt-4">
-              <span className="text-2xl font-bold text-gray-900 dark:text-gray-50">{finalizedAnamnesesCount}</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-gray-50">
+                {finalizedAnamnesesCount}
+              </span>
               <p className="text-xs text-gray-400 dark:text-gray-550 mt-1">documentadas em PDF</p>
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-900 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 transition-colors flex flex-col justify-between min-h-[120px] col-span-2 lg:col-span-1">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Alertas</span>
+              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Alertas
+              </span>
               <div className="p-2 bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 rounded-xl">
                 <AlertCircle className="h-5 w-5" />
               </div>
             </div>
             <div className="mt-4">
-              <span className="text-2xl font-bold text-gray-900 dark:text-gray-50">{alertsCount}</span>
+              <span className="text-2xl font-bold text-gray-900 dark:text-gray-50">
+                {alertsCount}
+              </span>
               <p className="text-xs text-gray-400 dark:text-gray-550 mt-1">sinais de atencao</p>
             </div>
           </div>
@@ -225,7 +251,6 @@ const Dashboard = () => {
 
         {/* Secao Principal: Atalhos & Recentes */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
           {/* Menu de Acoes Rapidas */}
           <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 transition-colors space-y-4">
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
@@ -243,7 +268,7 @@ const Dashboard = () => {
                 </div>
                 <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
               </Link>
-              
+
               <Link
                 to="/patients"
                 className="flex items-center justify-between p-3 bg-indigo-50/50 hover:bg-indigo-50 dark:bg-indigo-950/20 dark:hover:bg-indigo-950/30 text-indigo-700 dark:text-indigo-300 rounded-xl transition-all group font-medium"
@@ -279,13 +304,16 @@ const Dashboard = () => {
                 Ver todos
               </Link>
             </h2>
-            
+
             <div className="mt-4">
               {recentPatients.length === 0 ? (
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400 bg-gray-50/50 dark:bg-gray-800/20 rounded-xl border border-dashed border-gray-200 dark:border-gray-800">
                   <UserPlus className="h-8 w-8 mx-auto text-gray-300 dark:text-gray-700 mb-2" />
                   <p className="text-sm">Nenhum paciente cadastrado ainda.</p>
-                  <Link to="/patients/new" className="text-xs text-teal-600 hover:underline font-semibold mt-1 inline-block">
+                  <Link
+                    to="/patients/new"
+                    className="text-xs text-teal-600 hover:underline font-semibold mt-1 inline-block"
+                  >
                     Cadastrar o primeiro paciente
                   </Link>
                 </div>
@@ -302,21 +330,34 @@ const Dashboard = () => {
                     </thead>
                     <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-800 text-sm">
                       {recentPatients.map((patient) => (
-                        <tr key={patient.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors">
+                        <tr
+                          key={patient.id}
+                          className="hover:bg-gray-50/50 dark:hover:bg-gray-800/20 transition-colors"
+                        >
                           <td className="px-4 py-3 font-semibold text-gray-900 dark:text-gray-100">
                             {patient.fullName}
                           </td>
                           <td className="px-4 py-3">
-                            <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              patient.status === 'therapy' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300' :
-                              patient.status === 'evaluation' ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-300' :
-                              patient.status === 'follow_up' ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-300' :
-                              'bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                            }`}>
-                              {patient.status === 'therapy' ? 'Terapia' :
-                               patient.status === 'evaluation' ? 'Avaliação' :
-                               patient.status === 'follow_up' ? 'Acompanhamento' :
-                               patient.status === 'discharged' ? 'Alta' : 'Inativo'}
+                            <span
+                              className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                patient.status === 'therapy'
+                                  ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300'
+                                  : patient.status === 'evaluation'
+                                    ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-300'
+                                    : patient.status === 'follow_up'
+                                      ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-300'
+                                      : 'bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                              }`}
+                            >
+                              {patient.status === 'therapy'
+                                ? 'Terapia'
+                                : patient.status === 'evaluation'
+                                  ? 'Avaliação'
+                                  : patient.status === 'follow_up'
+                                    ? 'Acompanhamento'
+                                    : patient.status === 'discharged'
+                                      ? 'Alta'
+                                      : 'Inativo'}
                             </span>
                           </td>
                           <td className="px-4 py-3 text-gray-500 dark:text-gray-400">
@@ -338,9 +379,7 @@ const Dashboard = () => {
               )}
             </div>
           </div>
-
         </div>
-
       </div>
     </div>
   )
