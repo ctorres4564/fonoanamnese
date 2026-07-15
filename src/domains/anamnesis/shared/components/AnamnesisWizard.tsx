@@ -1,20 +1,20 @@
-import type { ActualAnamnesisSection, AutosaveState } from '../..';
-import { SectionNavigation } from './SectionNavigation';
-import { ProgressIndicator } from './ProgressIndicator';
-import { AutosaveIndicator } from './AutosaveIndicator';
+import type { ActualAnamnesisSection, AutosaveState } from '../..'
+import { SectionNavigation } from './SectionNavigation'
+import { ProgressIndicator } from './ProgressIndicator'
+import { AutosaveIndicator } from './AutosaveIndicator'
 
 interface AnamnesisWizardProps {
-  sections: { id: ActualAnamnesisSection | string; label: string }[];
-  currentSection: ActualAnamnesisSection | string;
-  completedSections: string[];
-  completionPercentage: number;
-  autosaveState: AutosaveState;
-  lastSavedAt?: Date;
-  onSelectSection: (section: any) => void;
-  onNext: () => void;
-  onPrevious: () => void;
-  onManualSave: () => void;
-  children: React.ReactNode;
+  sections: { id: ActualAnamnesisSection | string; label: string }[]
+  currentSection: ActualAnamnesisSection | string
+  completedSections: string[]
+  completionPercentage: number
+  autosaveState: AutosaveState
+  lastSavedAt?: Date
+  onSelectSection: (section: any) => void
+  onNext: () => void
+  onPrevious: () => void
+  onManualSave: () => void
+  children: React.ReactNode
 }
 
 export function AnamnesisWizard({
@@ -28,25 +28,25 @@ export function AnamnesisWizard({
   onNext,
   onPrevious,
   onManualSave,
-  children
+  children,
 }: AnamnesisWizardProps) {
-  const currentIndex = sections.findIndex(s => s.id === currentSection);
-  const isFirst = currentIndex === 0;
-  const isLast = currentIndex === sections.length - 1;
+  const currentIndex = sections.findIndex((s) => s.id === currentSection)
+  const isFirst = currentIndex === 0
+  const isLast = currentIndex === sections.length - 1
 
   return (
     <div className="flex flex-col md:flex-row gap-6 max-w-7xl mx-auto w-full">
       {/* Sidebar Navigation */}
       <aside className="w-full md:w-64 shrink-0 flex flex-col space-y-6">
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-          <SectionNavigation 
+        <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 transition-colors">
+          <SectionNavigation
             sections={sections}
             currentSection={currentSection}
             completedSections={completedSections}
             onSelectSection={onSelectSection}
           />
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 transition-colors">
           <ProgressIndicator percentage={completionPercentage} />
         </div>
       </aside>
@@ -54,30 +54,28 @@ export function AnamnesisWizard({
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {sections[currentIndex]?.label}
-          </h1>
-          <AutosaveIndicator 
-            state={autosaveState} 
-            lastSavedAt={lastSavedAt} 
-            onManualSave={onManualSave} 
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-50">{sections[currentIndex]?.label}</h1>
+          <AutosaveIndicator
+            state={autosaveState}
+            lastSavedAt={lastSavedAt}
+            onManualSave={onManualSave}
           />
         </div>
-        
+
         {/* Dynamic Section Content */}
-        <div className="flex-1">
-          {children}
-        </div>
+        <div className="flex-1">{children}</div>
 
         {/* Wizard Controls */}
-        <div className="mt-6 flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div className="mt-6 flex justify-between items-center bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 transition-colors">
           <button
             onClick={onPrevious}
             disabled={isFirst}
-            className={`px-4 py-2 text-sm font-medium rounded-md border
-              ${isFirst 
-                ? 'bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed' 
-                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+            className={`px-4 py-2 text-sm font-medium rounded-md border transition-colors
+              ${
+                isFirst
+                  ? 'bg-gray-50 dark:bg-gray-850 text-gray-400 dark:text-gray-600 border-gray-200 dark:border-gray-850 cursor-not-allowed'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-750 hover:bg-gray-50 dark:hover:bg-gray-750'
+              }`}
           >
             Anterior
           </button>
@@ -91,5 +89,5 @@ export function AnamnesisWizard({
         </div>
       </main>
     </div>
-  );
+  )
 }
