@@ -4,7 +4,9 @@ import {
   createAnamnesis, 
   updateProgress, 
   changeStatus, 
-  archiveAnamnesis 
+  archiveAnamnesis,
+  reopenAnamnesis,
+  getLatestActiveAnamnesisByPatient
 } from '../../services/anamnesisService';
 
 vi.mock('firebase/firestore', async (importOriginal) => {
@@ -31,7 +33,7 @@ describe('AnamnesisService', () => {
   it('createAnamnesis cria um novo rascunho', async () => {
     const anamnesis = await createAnamnesis('patient1', 'prof1');
     expect(anamnesis.status).toBe('draft');
-    expect(anamnesis.currentSection).toBe('identification');
+    expect(anamnesis.currentSection).toBe('interviewData');
     expect(anamnesis.patientId).toBe('patient1');
     expect(firestore.setDoc).toHaveBeenCalledTimes(1);
   });
@@ -77,5 +79,29 @@ describe('AnamnesisService', () => {
         updatedBy: 'prof1'
       })
     );
+  });
+
+  it('reopenAnamnesis seta isArchived falso e altera status para draft', async () => {
+    await reopenAnamnesis('a1', 'prof1');
+    
+    expect(firestore.updateDoc).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        isArchived: false,
+        status: 'draft',
+        updatedBy: 'prof1'
+      })
+    );
+  });
+
+  it('getLatestActiveAnamnesisByPatient faz query correta', async () => {
+    vi.mocked(firestore.getDocs).mockResolvedValueOnce({
+      empty: false,
+      docs: [{ id: 'doc1', data: () => ({ status: 'draft' }) }]
+    } as any);
+
+    await getLatestActiveAnamnesisByPatient('pat1', 'prof1');
+    
+    expect(firestore.query).toHaveBeenCalled();
   });
 });

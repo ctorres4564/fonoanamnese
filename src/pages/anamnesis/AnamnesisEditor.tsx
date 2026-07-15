@@ -27,7 +27,7 @@ const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
 ];
 
 export default function AnamnesisEditor() {
-  const { id, anamnesisId } = useParams<{ id: string; anamnesisId: string }>();
+  const { patientId, anamnesisId } = useParams<{ patientId: string; anamnesisId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   
@@ -120,7 +120,7 @@ export default function AnamnesisEditor() {
       await saveCurrentSection(SECTIONS[currentIndex + 1].id);
     } else {
       await saveCurrentSection();
-      navigate(`/patients/${id}/anamnesis/${anamnesisId}/review`);
+      navigate(`/patients/${patientId}/anamneses/${anamnesisId}/review`);
     }
   };
 
@@ -134,10 +134,42 @@ export default function AnamnesisEditor() {
     await saveCurrentSection();
   };
 
-  if (!anamnesis) return <div>Carregando editor...</div>;
+  const handleSaveAndExit = async () => {
+    await saveCurrentSection();
+    navigate(`/patients/${patientId}/anamneses`);
+  };
+
+  const handleBackToPatient = async () => {
+    await saveCurrentSection();
+    navigate(`/patients/${patientId}`);
+  };
+
+  if (!anamnesis) return <div className="p-4 text-center">Carregando editor...</div>;
 
   return (
     <div className="py-6 sm:px-6 lg:px-8">
+      {/* Header Actions */}
+      <div className="max-w-7xl mx-auto w-full mb-6 flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <div>
+          <h2 className="text-lg font-bold text-gray-900">Editor de Anamnese</h2>
+          <p className="text-sm text-gray-500">Versão: {anamnesis.version} | Status: {anamnesis.status}</p>
+        </div>
+        <div className="flex gap-4">
+          <button 
+            onClick={handleBackToPatient}
+            className="text-sm font-medium text-indigo-600 hover:text-indigo-500 transition"
+          >
+            Voltar ao Paciente
+          </button>
+          <button 
+            onClick={handleSaveAndExit}
+            className="text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded transition"
+          >
+            Salvar e Sair
+          </button>
+        </div>
+      </div>
+
       <AnamnesisWizard
         sections={SECTIONS}
         currentSection={anamnesis.currentSection}

@@ -17,7 +17,7 @@ export const createAnamnesis = async (
     patientId,
     professionalId,
     status: 'draft',
-    currentSection: 'identification',
+    currentSection: 'interviewData',
     completedSections: [],
     completionPercentage: 0,
     version: 1,
@@ -42,19 +42,77 @@ export const getAnamnesisById = async (id: string): Promise<AnamnesisType | null
   return { id: docSnap.id, ...docSnap.data() } as AnamnesisType;
 };
 
-export const listAnamnesesByPatient = async (patientId: string): Promise<AnamnesisType[]> => {
+export const listAnamnesesByPatient = async (
+  patientId: string, 
+  professionalId: string,
+  includeArchived = false
+): Promise<AnamnesisType[]> => {
+  const anamnesesRef = collection(db, COLLECTION_NAME);
+  
+  let q = query(
+    anamnesesRef,
+    where('patientId', '==', patientId),
+    where('professionalId', '==', professionalId)
+  );
+  
+  if (!includeArchived) {
+    q = query(q, where('isArchived', '==', false));
+  }
+
+  const querySnapshot = await getDocs(q);
+
+  // Firestore requires composite indexes for complex sorting with filtering, 
+  // so we sort in memory for now or assume indexes are created later.
+  const results = querySnapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  })) as AnamnesisType[];
+  
+  // Sort by updatedAt descending
+  return results.sort((a, b) => {
+    const timeA = a.updatedAt?.toMillis?.() || new Date(a.updatedAt).getTime() || 0;
+    const timeB = b.updatedAt?.toMillis?.() || new Date(b.updatedAt).getTime() || 0;
+    return timeB - timeA;
+  });
+};
+
+export const listActiveAnamnesesByPatient = async (
+  patientId: string,
+  professionalId: string
+): Promise<AnamnesisType[]> => {
+  return listAnamnesesByPatient(patientId, professionalId, false);
+};
+
+export const getLatestActiveAnamnesisByPatient = async (
+  patientId: string,
+  professionalId: string
+): Promise<AnamnesisType | null> => {
   const anamnesesRef = collection(db, COLLECTION_NAME);
   const q = query(
     anamnesesRef,
     where('patientId', '==', patientId),
-    where('isArchived', '==', false)
+    where('professionalId', '==', professionalId),
+    where('isArchived', '==', false),
+    where('status', 'in', ['draft', 'in_progress'])
   );
-  const querySnapshot = await getDocs(q);
 
-  return querySnapshot.docs.map(doc => ({
+  const querySnapshot = await getDocs(q);
+  
+  if (querySnapshot.empty) return null;
+
+  const results = querySnapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
   })) as AnamnesisType[];
+
+  // Sort by updatedAt descending to get latest
+  results.sort((a, b) => {
+    const timeA = a.updatedAt?.toMillis?.() || new Date(a.updatedAt).getTime() || 0;
+    const timeB = b.updatedAt?.toMillis?.() || new Date(b.updatedAt).getTime() || 0;
+    return timeB - timeA;
+  });
+
+  return results[0];
 };
 
 export const updateAnamnesis = async (
@@ -110,6 +168,16 @@ export const archiveAnamnesis = async (id: string, userId: string): Promise<void
   await updateDoc(docRef, {
     isArchived: true,
     status: 'archived',
+    updatedAt: serverTimestamp(),
+    updatedBy: userId,
+  });
+};
+
+export const reopenAnamnesis = async (id: string, userId: string): Promise<void> => {
+  const docRef = doc(db, COLLECTION_NAME, id);
+  await updateDoc(docRef, {
+    isArchived: false,
+    status: 'draft',
     updatedAt: serverTimestamp(),
     updatedBy: userId,
   });

@@ -101,7 +101,7 @@ export default function App() {
           />
 
           <Route 
-            path="/patients/:id/anamnesis" 
+            path="/patients/:patientId/anamneses" 
             element={
               <ProtectedRoute>
                 <AnamnesisList />
@@ -109,7 +109,7 @@ export default function App() {
             } 
           />
           <Route 
-            path="/patients/:id/anamnesis/:anamnesisId/edit" 
+            path="/patients/:patientId/anamneses/:anamnesisId/edit" 
             element={
               <ProtectedRoute>
                 <AnamnesisEditor />
@@ -117,7 +117,7 @@ export default function App() {
             } 
           />
           <Route 
-            path="/patients/:id/anamnesis/:anamnesisId/review" 
+            path="/patients/:patientId/anamneses/:anamnesisId/review" 
             element={
               <ProtectedRoute>
                 <AnamnesisReview />
@@ -125,7 +125,7 @@ export default function App() {
             } 
           />
           <Route 
-            path="/patients/:id/anamnesis/:anamnesisId/view" 
+            path="/patients/:patientId/anamneses/:anamnesisId/view" 
             element={
               <ProtectedRoute>
                 <AnamnesisView />

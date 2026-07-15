@@ -43,8 +43,9 @@ export default function ProfessionalProfile() {
       await refreshProfile();
       
       navigate('/', { replace: true });
-    } catch {
-      setError('Erro ao salvar perfil. Verifique sua conexão e tente novamente.');
+    } catch (err: any) {
+      console.error("Profile save error:", err);
+      setError(`Erro ao salvar perfil: ${err.message || 'Verifique sua conexão e tente novamente.'}`);
     }
   };
 

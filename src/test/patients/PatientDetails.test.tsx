@@ -5,6 +5,7 @@ import { PatientDetails } from '../../pages/patients/PatientDetails';
 import { AuthContext } from '../../contexts/AuthContext';
 import * as patientService from '../../services/patientService';
 import * as guardianService from '../../services/guardianService';
+import * as anamnesisService from '../../services/anamnesisService';
 
 vi.mock('../../services/patientService', () => ({
   getPatientById: vi.fn(),
@@ -12,6 +13,12 @@ vi.mock('../../services/patientService', () => ({
 
 vi.mock('../../services/guardianService', () => ({
   listGuardiansByPatient: vi.fn(),
+}));
+
+vi.mock('../../services/anamnesisService', () => ({
+  listAnamnesesByPatient: vi.fn(),
+  getLatestActiveAnamnesisByPatient: vi.fn(),
+  createAnamnesis: vi.fn(),
 }));
 
 describe('PatientDetails', () => {
@@ -67,6 +74,8 @@ describe('PatientDetails', () => {
         isPrimaryContact: true,
       }
     ]);
+
+    (anamnesisService.listAnamnesesByPatient as any).mockResolvedValue([]);
 
     renderWithProviders('/patients/pat1');
 
