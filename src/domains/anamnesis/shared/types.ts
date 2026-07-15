@@ -4,6 +4,7 @@ import type { PregnancyBirthNeonatalSection } from '../pregnancy/types';
 import type { MotorDevelopmentSection } from '../motor/types';
 import type { CommunicationDevelopmentSection } from '../communication/types';
 import type { LanguageDevelopmentSection } from '../language/types';
+import type { SpeechDevelopmentSection } from '../speech/types';
 
 export type AnamnesisStatus = 'draft' | 'in_progress' | 'review' | 'finalized' | 'corrected' | 'archived';
 
@@ -15,7 +16,7 @@ export type AnamnesisSection = 'identification' | 'clinical_history' | 'developm
 // - chiefComplaint
 // Então as seções reais agora são essas.
 
-export type ActualAnamnesisSection = 'interviewData' | 'chiefComplaint' | 'pregnancyBirthNeonatal' | 'motorDevelopment' | 'communicationDevelopment' | 'languageDevelopment' | 'identification' | 'clinical_history' | 'development' | 'social_history' | 'other';
+export type ActualAnamnesisSection = 'interviewData' | 'chiefComplaint' | 'pregnancyBirthNeonatal' | 'motorDevelopment' | 'communicationDevelopment' | 'languageDevelopment' | 'speechDevelopment' | 'identification' | 'clinical_history' | 'development' | 'social_history' | 'other';
 
 export interface AnamnesisProgress {
   currentSection: ActualAnamnesisSection;
@@ -49,6 +50,7 @@ export interface Anamnesis {
     motorDevelopment?: MotorDevelopmentSection;
     communicationDevelopment?: CommunicationDevelopmentSection;
     languageDevelopment?: LanguageDevelopmentSection;
+    speechDevelopment?: SpeechDevelopmentSection;
     [key: string]: any; 
   };
 }

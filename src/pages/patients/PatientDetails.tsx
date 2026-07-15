@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { getPatientById } from '../../services/patientService';
@@ -17,7 +17,7 @@ export const PatientDetails: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showGuardianForm, setShowGuardianForm] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     if (!user || !id) return;
     try {
       setLoading(true);
@@ -41,11 +41,11 @@ export const PatientDetails: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, id]);
 
   useEffect(() => {
     fetchData();
-  }, [user, id]);
+  }, [user, id, fetchData]);
 
   if (loading) return <div className="p-4 text-center">Carregando detalhes...</div>;
   if (error) return <div className="p-4 text-red-600 text-center">{error}</div>;

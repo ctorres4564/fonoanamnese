@@ -20,6 +20,7 @@ export const updateAnamnesisSchema = z.object({
     motorDevelopment: z.any().optional(),
     communicationDevelopment: z.any().optional(),
     languageDevelopment: z.any().optional(),
+    speechDevelopment: z.any().optional(),
   }).optional(),
 });
 

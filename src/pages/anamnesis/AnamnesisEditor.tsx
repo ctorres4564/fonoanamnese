@@ -13,6 +13,7 @@ import { PregnancyBirthNeonatalSection } from '../../domains/anamnesis/pregnancy
 import { MotorDevelopmentSection } from '../../domains/anamnesis/motor/components/MotorDevelopmentSection';
 import { CommunicationDevelopmentSection } from '../../domains/anamnesis/communication/components/CommunicationDevelopmentSection';
 import { LanguageDevelopmentSection } from '../../domains/anamnesis/language/components/LanguageDevelopmentSection';
+import { SpeechDevelopmentSection } from '../../domains/anamnesis/speech/components/SpeechDevelopmentSection';
 import { calculateAnamnesisProgress } from '../../utils/progress';
 
 const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
@@ -22,6 +23,7 @@ const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
   { id: 'motorDevelopment', label: 'Desenvolvimento Motor' },
   { id: 'communicationDevelopment', label: 'Comunicação Inicial' },
   { id: 'languageDevelopment', label: 'Linguagem Receptiva e Expressiva' },
+  { id: 'speechDevelopment', label: 'Fala e Articulação' },
 ];
 
 export default function AnamnesisEditor() {
@@ -185,6 +187,12 @@ export default function AnamnesisEditor() {
           {anamnesis.currentSection === 'languageDevelopment' && (
             <LanguageDevelopmentSection 
               initialData={anamnesis.sections?.languageDevelopment} 
+              onChange={handleSectionDataChange} 
+            />
+          )}
+          {anamnesis.currentSection === 'speechDevelopment' && (
+            <SpeechDevelopmentSection 
+              initialData={anamnesis.sections?.speechDevelopment} 
               onChange={handleSectionDataChange} 
             />
           )}
