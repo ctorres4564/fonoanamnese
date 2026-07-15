@@ -37,7 +37,9 @@
 
 /* Dark Mode Global Component Overrides */
 .dark body {
-  background-color: hsl(var(--color-bg-dark-h) var(--color-bg-dark-s) var(--color-bg-dark-l)) !important;
+  background-color: hsl(
+    var(--color-bg-dark-h) var(--color-bg-dark-s) var(--color-bg-dark-l)
+  ) !important;
   color: #f3f4f6 !important;
 }
 
@@ -90,26 +92,56 @@
   color: #9ca3af !important; /* gray-400 */
 }
 
-/* Formularios (Inputs, Selects, Textareas) */
-.dark input, 
-.dark select, 
+/* Formularios (Inputs, Selects, Textareas) - Modo Claro Padrao */
+input,
+select,
+textarea {
+  background-color: #ffffff !important;
+  color: #1f2937 !important; /* gray-900 para alto contraste */
+  border-color: #d1d5db !important; /* gray-300 */
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: hsl(
+    var(--color-primary-h) var(--color-primary-s) var(--color-primary-l)
+  ) !important;
+  box-shadow: 0 0 0 2px
+    hsla(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l), 0.2) !important;
+}
+
+/* Modo Escuro (.dark) */
+.dark input,
+.dark select,
 .dark textarea {
-  background-color: #111827 !important; /* gray-900 */
+  background-color: #1f2937 !important; /* gray-800 para consistencia com paineis */
   border-color: #4b5563 !important; /* gray-600 */
-  color: #f3f4f6 !important;
+  color: #f9fafb !important; /* gray-50 para alto contraste */
 }
 
-.dark input::placeholder {
-  color: #6b7280 !important;
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #9ca3af !important;
 }
 
-.dark input:focus, 
-.dark select:focus, 
+.dark input:focus,
+.dark select:focus,
 .dark textarea:focus {
   outline: none;
-  border-color: hsl(var(--color-primary-h) var(--color-primary-s) var(--color-primary-l)) !important;
-  box-shadow: 0 0 0 2px hsla(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l), 0.2) !important;
+  border-color: hsl(
+    var(--color-primary-h) var(--color-primary-s) var(--color-primary-l)
+  ) !important;
+  box-shadow: 0 0 0 2px
+    hsla(var(--color-primary-h), var(--color-primary-s), var(--color-primary-l), 0.2) !important;
 }
+
 
 /* Botoes base */
 .dark .bg-white.text-gray-600 {
@@ -126,4 +158,3 @@
   background-color: #4b5563 !important;
   color: #f3f4f6 !important;
 }
-
