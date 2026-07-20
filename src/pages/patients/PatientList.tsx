@@ -16,7 +16,6 @@ export const PatientList: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>('all')
   const [showArchived, setShowArchived] = useState(false)
 
   useEffect(() => {
@@ -83,9 +82,7 @@ export const PatientList: React.FC = () => {
   const currentList = showArchived ? archived : patients
 
   const filteredList = currentList.filter((p) => {
-    const matchesSearch = p.fullName.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = statusFilter === 'all' || p.status === statusFilter
-    return matchesSearch && matchesStatus
+    return p.fullName.toLowerCase().includes(searchTerm.toLowerCase())
   })
 
   if (loading) {
@@ -114,18 +111,6 @@ export const PatientList: React.FC = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <select
-          className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="all">Todos os Status</option>
-          <option value="evaluation">Avaliação</option>
-          <option value="therapy">Terapia</option>
-          <option value="follow_up">Acompanhamento</option>
-          <option value="discharged">Alta</option>
-          <option value="inactive">Inativo</option>
-        </select>
         <button
           onClick={() => setShowArchived(!showArchived)}
           className={`px-4 py-2 border rounded transition ${showArchived ? 'bg-gray-200 text-gray-800' : 'bg-white text-gray-600 hover:bg-gray-50'}`}

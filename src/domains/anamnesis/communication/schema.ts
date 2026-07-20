@@ -179,11 +179,8 @@ export const communicationDevelopmentSchema = z
   .object({
     preLinguisticCommunication: preLinguisticCommunicationSchema.optional(),
     vocalizationHistory: vocalizationHistorySchema.optional(),
-    earlyLanguageDevelopment: earlyLanguageDevelopmentSchema.optional(),
     communicationModes: z.array(z.enum(COMMUNICATION_MODES)).optional(),
     communicationModeOtherDescription: z.string().optional(),
-    alternativeCommunication: alternativeCommunicationSchema.optional(),
-    communicationRegression: communicationRegressionSchema.optional(),
   })
   .superRefine((data, ctx) => {
     if (data.communicationModes?.includes('outro') && !data.communicationModeOtherDescription) {

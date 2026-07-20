@@ -110,8 +110,8 @@ describe('AnamnesisEditor Integration', () => {
 
     const updateArgs = (anamnesisService.updateAnamnesis as any).mock.calls[0][1]
 
-    // Como a seção atual falhou validação e temos 2 seções completas de um total de 7, percentage deve ser 29
-    expect(updateArgs.completionPercentage).toBe(29)
+    // O editor revalida os dados persistidos: apenas uma das 8 etapas do fixture está válida.
+    expect(updateArgs.completionPercentage).toBe(13)
   })
 
   it('should keep other section values as they were without replacing by undefined', async () => {
@@ -135,7 +135,7 @@ describe('AnamnesisEditor Integration', () => {
   it('should show "Ir para revisão" when on the last section', async () => {
     ;(anamnesisService.getAnamnesisById as any).mockResolvedValue({
       ...mockAnamnesis,
-      currentSection: 'speechDevelopment', // A última seção
+      currentSection: 'childRoutine', // A última seção ativa
     })
 
     renderEditor()
@@ -146,5 +146,40 @@ describe('AnamnesisEditor Integration', () => {
 
     // Ensure "Finalizar" is NOT present (the user requirement explicitly said it shouldn't use "Finalizar" in the editor)
     expect(screen.queryByText('Finalizar')).not.toBeInTheDocument()
+  })
+
+  it('exibe Desenvolvimento da Linguagem e as novas etapas', async () => {
+    renderEditor()
+
+    await waitFor(() => expect(screen.getByText('Desenvolvimento da Linguagem')).toBeInTheDocument())
+    expect(screen.getByText('Histórico de Saúde')).toBeInTheDocument()
+    expect(screen.getByText('Histórico Familiar')).toBeInTheDocument()
+    expect(screen.getByText('Rotina da Criança')).toBeInTheDocument()
+    expect(screen.queryByText('Comunicação Visual')).not.toBeInTheDocument()
+    expect(screen.queryByText('Linguagem Receptiva e Expressiva')).not.toBeInTheDocument()
+    expect(screen.queryByText('Fala e Articulação')).not.toBeInTheDocument()
+  })
+
+  it('preserves legacy section data when saving an old anamnesis', async () => {
+    ;(anamnesisService.getAnamnesisById as any).mockResolvedValue({
+      ...mockAnamnesis,
+      currentSection: 'languageDevelopment',
+      sections: {
+        ...mockAnamnesis.sections,
+        languageDevelopment: { receptiveLanguage: { understandsName: true } },
+        speechDevelopment: { speechHistory: { firstWordsAge: 18 } },
+      },
+    })
+    renderEditor()
+    await waitFor(() => expect(screen.getAllByText('Dados da Entrevista').length).toBeGreaterThan(0))
+
+    fireEvent.click(screen.getByText('Salvar Agora'))
+    await waitFor(() => expect(anamnesisService.updateAnamnesis).toHaveBeenCalled())
+    const updateArgs = (anamnesisService.updateAnamnesis as any).mock.calls[0][1]
+
+    expect(updateArgs.sections.languageDevelopment).toEqual({
+      receptiveLanguage: { understandsName: true },
+    })
+    expect(updateArgs.sections.speechDevelopment).toEqual({ speechHistory: { firstWordsAge: 18 } })
   })
 })

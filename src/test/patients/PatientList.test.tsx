@@ -73,5 +73,6 @@ describe('PatientList', () => {
     // Should render only active (non-archived) by default
     expect(screen.getByText('João Silva')).toBeInTheDocument()
     expect(screen.queryByText('Maria Souza')).not.toBeInTheDocument()
+    expect(screen.queryByText('Todos os Status')).not.toBeInTheDocument()
   })
 })

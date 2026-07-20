@@ -4,10 +4,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PreLinguisticCommunicationFields } from './PreLinguisticCommunicationFields'
 import { VocalizationHistoryFields } from './VocalizationHistoryFields'
-import { EarlyLanguageDevelopmentFields } from './EarlyLanguageDevelopmentFields'
 import { CommunicationModesFields } from './CommunicationModesFields'
-import { AlternativeCommunicationFields } from './AlternativeCommunicationFields'
-import { CommunicationRegressionFields } from './CommunicationRegressionFields'
 import type { CommunicationDevelopmentSection as CommunicationSectionType } from '../types'
 import { communicationDevelopmentSchema } from '../schema'
 
@@ -50,10 +47,7 @@ export function CommunicationDevelopmentSection({
       <div className="space-y-6">
         <PreLinguisticCommunicationFields />
         <VocalizationHistoryFields />
-        <EarlyLanguageDevelopmentFields />
         <CommunicationModesFields />
-        <AlternativeCommunicationFields />
-        <CommunicationRegressionFields />
       </div>
     </FormProvider>
   )

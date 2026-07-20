@@ -4,7 +4,7 @@ import { ProgressIndicator } from './ProgressIndicator'
 import { AutosaveIndicator } from './AutosaveIndicator'
 
 interface AnamnesisWizardProps {
-  sections: { id: ActualAnamnesisSection | string; label: string }[]
+  sections: readonly { id: ActualAnamnesisSection | string; label: string }[]
   currentSection: ActualAnamnesisSection | string
   completedSections: string[]
   completionPercentage: number

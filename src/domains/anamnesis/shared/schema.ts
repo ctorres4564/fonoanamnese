@@ -22,6 +22,9 @@ export const updateAnamnesisSchema = z.object({
       pregnancyBirthNeonatal: z.any().optional(),
       motorDevelopment: z.any().optional(),
       communicationDevelopment: z.any().optional(),
+      healthHistory: z.any().optional(),
+      familyHistory: z.any().optional(),
+      childRoutine: z.any().optional(),
       languageDevelopment: z.any().optional(),
       speechDevelopment: z.any().optional(),
     })

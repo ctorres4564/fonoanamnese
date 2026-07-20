@@ -7,6 +7,9 @@ import { motorDevelopmentSchema } from '../domains/anamnesis/motor/schema'
 import { communicationDevelopmentSchema } from '../domains/anamnesis/communication/schema'
 import { languageDevelopmentSchema } from '../domains/anamnesis/language/schema'
 import { speechDevelopmentSchema } from '../domains/anamnesis/speech/schema'
+import { healthHistorySchema } from '../domains/anamnesis/health/schema'
+import { familyHistorySchema } from '../domains/anamnesis/family/schema'
+import { childRoutineSchema } from '../domains/anamnesis/routine/schema'
 
 // Map of all section schemas
 export const SECTION_SCHEMAS: Partial<Record<ActualAnamnesisSection, ZodSchema>> = {
@@ -15,6 +18,9 @@ export const SECTION_SCHEMAS: Partial<Record<ActualAnamnesisSection, ZodSchema>>
   pregnancyBirthNeonatal: pregnancyBirthNeonatalSchema,
   motorDevelopment: motorDevelopmentSchema,
   communicationDevelopment: communicationDevelopmentSchema,
+  healthHistory: healthHistorySchema,
+  familyHistory: familyHistorySchema,
+  childRoutine: childRoutineSchema,
   languageDevelopment: languageDevelopmentSchema,
   speechDevelopment: speechDevelopmentSchema,
 }
@@ -23,6 +29,18 @@ export interface SectionValidationResult {
   isValid: boolean
   errors: string[]
   filledFieldsCount: number
+}
+
+function countFilledValues(value: unknown): number {
+  if (value === undefined || value === null || value === '') return 0
+  if (Array.isArray(value)) return value.reduce((total, item) => total + countFilledValues(item), 0)
+  if (typeof value === 'object') {
+    return Object.values(value as Record<string, unknown>).reduce(
+      (total: number, item) => total + countFilledValues(item),
+      0,
+    )
+  }
+  return 1
 }
 
 export function validateSection(
@@ -46,19 +64,10 @@ export function validateSection(
     }
   }
 
-  // Calculate filled fields count (shallow count of non-empty values)
-  let filledFieldsCount = 0
-  if (typeof data === 'object') {
-    Object.keys(data).forEach((key) => {
-      const val = data[key]
-      if (val !== undefined && val !== null && val !== '') {
-        if (Array.isArray(val)) {
-          if (val.length > 0) filledFieldsCount++
-        } else {
-          filledFieldsCount++
-        }
-      }
-    })
+  const filledFieldsCount = countFilledValues(data)
+
+  if (filledFieldsCount === 0) {
+    return { isValid: false, errors: ['Nenhum dado preenchido'], filledFieldsCount: 0 }
   }
 
   const result = schema.safeParse(data)

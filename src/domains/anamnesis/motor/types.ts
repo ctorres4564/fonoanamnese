@@ -26,23 +26,24 @@ export interface MotorDevelopmentSection {
   milestones: {
     cervicalControl: MotorMilestone
     rolling: MotorMilestone
-    sittingWithSupport: MotorMilestone
-    sittingWithoutSupport: MotorMilestone
+    sittingWithSupport?: MotorMilestone
+    sittingWithoutSupport?: MotorMilestone
     crawlingOnBelly: MotorMilestone // arrastar-se
     crawling: MotorMilestone // engatinhar
-    standingWithSupport: MotorMilestone
-    standingWithoutSupport: MotorMilestone
+    standingWithSupport?: MotorMilestone
+    standingWithoutSupport?: MotorMilestone
     walkingWithSupport: MotorMilestone
     walkingWithoutSupport: MotorMilestone
-    running: MotorMilestone
-    climbingStairs: MotorMilestone
-    descendingStairs: MotorMilestone
-    jumpingWithBothFeet: MotorMilestone
-    balance: MotorMilestone
-    globalMotorCoordination: MotorMilestone
+    running?: MotorMilestone
+    climbingStairs?: MotorMilestone
+    descendingStairs?: MotorMilestone
+    jumpingWithBothFeet?: MotorMilestone
+    balance?: MotorMilestone
+    globalMotorCoordination?: MotorMilestone
     fineMotorCoordination: MotorMilestone
   }
-  general: {
+  /** @deprecated Preservado somente para registros históricos. */
+  general?: {
     ageAppropriateDevelopment?: 'sim' | 'não' | 'não informado'
     reportedMotorDelay?: 'sim' | 'não' | 'não informado'
     motorDelayDescription?: string
@@ -61,6 +62,8 @@ export interface MotorDevelopmentSection {
     mobilityDeviceType?: string
     additionalObservations?: string
   }
-  regression: MotorRegression
-  physiotherapy: PhysiotherapyHistory
+  /** @deprecated Preservado somente para registros históricos. */
+  regression?: MotorRegression
+  /** @deprecated Preservado somente para registros históricos. */
+  physiotherapy?: PhysiotherapyHistory
 }

@@ -4,9 +4,9 @@ export function calculateAnamnesisProgress(
   currentCompleted: ActualAnamnesisSection[],
   sectionId: ActualAnamnesisSection,
   isValid: boolean,
-  totalSectionsCount: number,
+  activeSections: readonly ActualAnamnesisSection[],
 ): { newCompleted: ActualAnamnesisSection[]; completionPercentage: number } {
-  let newCompleted = [...currentCompleted]
+  let newCompleted = currentCompleted.filter((section) => activeSections.includes(section))
 
   if (isValid) {
     if (!newCompleted.includes(sectionId)) {
@@ -17,9 +17,9 @@ export function calculateAnamnesisProgress(
   }
 
   // Ensure percentage stays between 0 and 100, even if totalSectionsCount is 0 or newCompleted > totalSectionsCount (should not happen)
-  if (totalSectionsCount === 0) return { newCompleted, completionPercentage: 0 }
+  if (activeSections.length === 0) return { newCompleted, completionPercentage: 0 }
 
-  let percentage = Math.round((newCompleted.length / totalSectionsCount) * 100)
+  let percentage = Math.round((newCompleted.length / activeSections.length) * 100)
   percentage = Math.max(0, Math.min(100, percentage))
 
   return {

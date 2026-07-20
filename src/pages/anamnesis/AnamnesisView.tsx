@@ -2,20 +2,13 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getAnamnesisById } from '../../services/anamnesisService'
 import { getPatientById } from '../../services/patientService'
-import type { Anamnesis, ActualAnamnesisSection } from '../../domains/anamnesis'
+import { ACTIVE_ANAMNESIS_SECTIONS, type Anamnesis, type ActualAnamnesisSection } from '../../domains/anamnesis'
 import type { Patient } from '../../types'
 import { useAuth } from '../../contexts/AuthContext'
 import { ChevronDown, ChevronUp, Lock } from 'lucide-react'
+import { DiagnosticSummary } from '../../domains/anamnesis/interview/components/DiagnosticSummary'
 
-const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
-  { id: 'interviewData', label: 'Dados da Entrevista' },
-  { id: 'chiefComplaint', label: 'Queixa Principal' },
-  { id: 'pregnancyBirthNeonatal', label: 'Gestação, Parto e Neonatal' },
-  { id: 'motorDevelopment', label: 'Desenvolvimento Motor' },
-  { id: 'communicationDevelopment', label: 'Comunicação Inicial' },
-  { id: 'languageDevelopment', label: 'Linguagem Receptiva e Expressiva' },
-  { id: 'speechDevelopment', label: 'Fala e Articulação' },
-]
+const SECTIONS = ACTIVE_ANAMNESIS_SECTIONS
 
 export default function AnamnesisView() {
   const { patientId, anamnesisId } = useParams<{ patientId: string; anamnesisId: string }>()
@@ -158,6 +151,7 @@ export default function AnamnesisView() {
             <p className="text-gray-700">
               <strong>Prontuário:</strong> {patient.recordNumber || 'N/A'}
             </p>
+            <DiagnosticSummary interviewData={anamnesis.sections.interviewData} />
           </div>
           <div className="text-left md:text-right text-sm text-gray-600 border-l md:border-l-0 md:border-r border-gray-200 pl-4 md:pr-4">
             <p>
@@ -197,7 +191,7 @@ export default function AnamnesisView() {
           </div>
           <div className="ml-3">
             <p className="text-sm text-blue-700">
-              <strong>Nota de Versão:</strong> Esta anamnese foi concluída contendo apenas os 7
+              <strong>Nota de Versão:</strong> Esta anamnese foi concluída contendo apenas os 8
               módulos clínicos ativos atualmente implementados na versão atual do sistema. Os demais
               módulos previstos (AVDs/Sono, Alimentação, Histórico de Saúde e Familiar) ainda não
               estão disponíveis nesta versão parcial.

@@ -5,6 +5,9 @@ import type { MotorDevelopmentSection } from '../motor/types'
 import type { CommunicationDevelopmentSection } from '../communication/types'
 import type { LanguageDevelopmentSection } from '../language/types'
 import type { SpeechDevelopmentSection } from '../speech/types'
+import type { HealthHistory } from '../health/types'
+import type { FamilyHistory } from '../family/types'
+import type { ChildRoutine } from '../routine/types'
 
 export type AnamnesisStatus =
   'draft' | 'in_progress' | 'review' | 'finalized' | 'corrected' | 'archived'
@@ -24,6 +27,9 @@ export type ActualAnamnesisSection =
   | 'pregnancyBirthNeonatal'
   | 'motorDevelopment'
   | 'communicationDevelopment'
+  | 'healthHistory'
+  | 'familyHistory'
+  | 'childRoutine'
   | 'languageDevelopment'
   | 'speechDevelopment'
   | 'identification'
@@ -63,7 +69,12 @@ export interface Anamnesis {
     pregnancyBirthNeonatal?: PregnancyBirthNeonatalSection
     motorDevelopment?: MotorDevelopmentSection
     communicationDevelopment?: CommunicationDevelopmentSection
+    healthHistory?: HealthHistory
+    familyHistory?: FamilyHistory
+    childRoutine?: ChildRoutine
+    /** @deprecated Campo legado preservado para não perder dados históricos. */
     languageDevelopment?: LanguageDevelopmentSection
+    /** @deprecated Campo legado preservado para não perder dados históricos. */
     speechDevelopment?: SpeechDevelopmentSection
     [key: string]: any
   }

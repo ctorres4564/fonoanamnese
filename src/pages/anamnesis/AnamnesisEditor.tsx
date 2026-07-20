@@ -1,7 +1,14 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getAnamnesisById, updateAnamnesis } from '../../services/anamnesisService'
-import type { Anamnesis, ActualAnamnesisSection, AutosaveState } from '../../domains/anamnesis'
+import {
+  ACTIVE_ANAMNESIS_SECTIONS,
+  ACTIVE_ANAMNESIS_SECTION_IDS,
+  isActiveAnamnesisSection,
+  type Anamnesis,
+  type ActualAnamnesisSection,
+  type AutosaveState,
+} from '../../domains/anamnesis'
 import { useAuth } from '../../contexts/AuthContext'
 import { AnamnesisWizard } from '../../domains/anamnesis/shared/components/AnamnesisWizard'
 import { SectionContainer } from '../../domains/anamnesis/shared/components/SectionContainer'
@@ -12,19 +19,13 @@ import { ChiefComplaintSection } from '../../domains/anamnesis/chiefComplaint/co
 import { PregnancyBirthNeonatalSection } from '../../domains/anamnesis/pregnancy/components/PregnancyBirthNeonatalSection'
 import { MotorDevelopmentSection } from '../../domains/anamnesis/motor/components/MotorDevelopmentSection'
 import { CommunicationDevelopmentSection } from '../../domains/anamnesis/communication/components/CommunicationDevelopmentSection'
-import { LanguageDevelopmentSection } from '../../domains/anamnesis/language/components/LanguageDevelopmentSection'
-import { SpeechDevelopmentSection } from '../../domains/anamnesis/speech/components/SpeechDevelopmentSection'
+import { HealthHistorySection } from '../../domains/anamnesis/health/components/HealthHistorySection'
+import { FamilyHistorySection } from '../../domains/anamnesis/family/components/FamilyHistorySection'
+import { ChildRoutineSection } from '../../domains/anamnesis/routine/components/ChildRoutineSection'
 import { calculateAnamnesisProgress } from '../../utils/progress'
+import { validateSection } from '../../utils/validation'
 
-const SECTIONS: { id: ActualAnamnesisSection; label: string }[] = [
-  { id: 'interviewData', label: 'Dados da Entrevista' },
-  { id: 'chiefComplaint', label: 'Queixa Principal' },
-  { id: 'pregnancyBirthNeonatal', label: 'Gestação, Parto e Neonatal' },
-  { id: 'motorDevelopment', label: 'Desenvolvimento Motor' },
-  { id: 'communicationDevelopment', label: 'Comunicação Inicial' },
-  { id: 'languageDevelopment', label: 'Linguagem Receptiva e Expressiva' },
-  { id: 'speechDevelopment', label: 'Fala e Articulação' },
-]
+const SECTIONS = ACTIVE_ANAMNESIS_SECTIONS
 
 export default function AnamnesisEditor() {
   const { patientId, anamnesisId } = useParams<{ patientId: string; anamnesisId: string }>()
@@ -34,6 +35,7 @@ export default function AnamnesisEditor() {
   const [anamnesis, setAnamnesis] = useState<Anamnesis | null>(null)
   const [autosaveState, setAutosaveState] = useState<AutosaveState>('idle')
   const [lastSavedAt, setLastSavedAt] = useState<Date | undefined>()
+  const [currentSectionValid, setCurrentSectionValid] = useState(false)
 
   // Armazena temporariamente os dados editados antes de salvar
   const currentDataRef = useRef<any>(null)
@@ -44,9 +46,16 @@ export default function AnamnesisEditor() {
       getAnamnesisById(anamnesisId).then((data) => {
         if (data) {
           // Se a seção atual for uma das velhas, atualiza para a primeira real
-          if (data.currentSection === ('identification' as any)) {
+          if (!isActiveAnamnesisSection(data.currentSection)) {
             data.currentSection = 'interviewData'
           }
+          const completedSections = ACTIVE_ANAMNESIS_SECTION_IDS.filter((sectionId) =>
+            validateSection(sectionId, data.sections?.[sectionId]).isValid,
+          )
+          data.completedSections = completedSections
+          data.completionPercentage = Math.round(
+            (completedSections.length / ACTIVE_ANAMNESIS_SECTION_IDS.length) * 100,
+          )
           setAnamnesis(data)
         }
       })
@@ -56,6 +65,7 @@ export default function AnamnesisEditor() {
   const handleSectionDataChange = useCallback((data: any, isValid: boolean) => {
     currentDataRef.current = data
     currentSectionValidRef.current = isValid
+    setCurrentSectionValid(isValid)
   }, [])
 
   const saveCurrentSection = async (navigatingTo?: ActualAnamnesisSection) => {
@@ -76,7 +86,7 @@ export default function AnamnesisEditor() {
         anamnesis.completedSections,
         sectionId,
         currentSectionValidRef.current,
-        SECTIONS.length,
+        ACTIVE_ANAMNESIS_SECTION_IDS,
       )
 
       const nextSection = navigatingTo || anamnesis.currentSection
@@ -150,6 +160,13 @@ export default function AnamnesisEditor() {
 
   if (!anamnesis) return <div className="p-4 text-center">Carregando editor...</div>
 
+  const liveProgress = calculateAnamnesisProgress(
+    anamnesis.completedSections,
+    anamnesis.currentSection,
+    currentSectionValid,
+    ACTIVE_ANAMNESIS_SECTION_IDS,
+  )
+
   return (
     <div className="py-6 sm:px-6 lg:px-8">
       {/* Header Actions */}
@@ -179,8 +196,8 @@ export default function AnamnesisEditor() {
       <AnamnesisWizard
         sections={SECTIONS}
         currentSection={anamnesis.currentSection}
-        completedSections={anamnesis.completedSections}
-        completionPercentage={anamnesis.completionPercentage}
+        completedSections={liveProgress.newCompleted}
+        completionPercentage={liveProgress.completionPercentage}
         autosaveState={autosaveState}
         lastSavedAt={lastSavedAt}
         onSelectSection={handleSelectSection}
@@ -222,17 +239,14 @@ export default function AnamnesisEditor() {
               onChange={handleSectionDataChange}
             />
           )}
-          {anamnesis.currentSection === 'languageDevelopment' && (
-            <LanguageDevelopmentSection
-              initialData={anamnesis.sections?.languageDevelopment}
-              onChange={handleSectionDataChange}
-            />
+          {anamnesis.currentSection === 'healthHistory' && (
+            <HealthHistorySection initialData={anamnesis.sections?.healthHistory} onChange={handleSectionDataChange} />
           )}
-          {anamnesis.currentSection === 'speechDevelopment' && (
-            <SpeechDevelopmentSection
-              initialData={anamnesis.sections?.speechDevelopment}
-              onChange={handleSectionDataChange}
-            />
+          {anamnesis.currentSection === 'familyHistory' && (
+            <FamilyHistorySection initialData={anamnesis.sections?.familyHistory} onChange={handleSectionDataChange} />
+          )}
+          {anamnesis.currentSection === 'childRoutine' && (
+            <ChildRoutineSection initialData={anamnesis.sections?.childRoutine} onChange={handleSectionDataChange} />
           )}
         </SectionContainer>
       </AnamnesisWizard>

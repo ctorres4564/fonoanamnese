@@ -25,7 +25,7 @@ export function CommunicationModesFields() {
   return (
     <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-6">
       <h3 className="text-lg font-medium text-gray-800 border-b pb-2">
-        4. Modos de Comunicação Utilizados
+        3. Modos de Comunicação Utilizados
       </h3>
 
       <div>

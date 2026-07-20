@@ -9,16 +9,16 @@ describe('MotorDevelopmentSection', () => {
     return <MotorDevelopmentSection onChange={mockOnChange} />
   }
 
-  it('should render all major groups', () => {
+  it('renderiza somente os grupos motores ativos e mantém coordenação motora fina', () => {
     render(<Wrapper />)
     expect(screen.getByText('Marcos Motores')).toBeInTheDocument()
     expect(screen.getByText('Marcos Iniciais')).toBeInTheDocument()
     expect(screen.getByText('Locomoção')).toBeInTheDocument()
-    expect(screen.getByText('Equilíbrio e Coordenação Global')).toBeInTheDocument()
     expect(screen.getByText('Coordenação Motora Fina')).toBeInTheDocument()
-    expect(screen.getByText('5. Regressão')).toBeInTheDocument()
-    expect(screen.getByText('6. Histórico Terapêutico')).toBeInTheDocument()
-    expect(screen.getByText('7. Condições Gerais')).toBeInTheDocument()
+    expect(screen.queryByText('Equilíbrio e Coordenação Global')).not.toBeInTheDocument()
+    expect(screen.queryByText('5. Regressão')).not.toBeInTheDocument()
+    expect(screen.queryByText('6. Histórico Terapêutico')).not.toBeInTheDocument()
+    expect(screen.queryByText('7. Condições Gerais')).not.toBeInTheDocument()
   })
 
   it('should show acquisition age when milestone status is adquirido', () => {
@@ -35,39 +35,4 @@ describe('MotorDevelopmentSection', () => {
     expect(screen.getByText('Modo de aquisição')).toBeInTheDocument()
   })
 
-  it('should show regression warning and specific fields when hasRegression is sim', () => {
-    const { container } = render(<Wrapper />)
-
-    const select = container.querySelector(
-      'select[name="motorDevelopment.regression.hasRegression"]',
-    )
-    fireEvent.change(select!, { target: { value: 'sim' } })
-
-    expect(screen.getByText(/Foi relatada perda de habilidade motora/)).toBeInTheDocument()
-    expect(screen.getByText('Habilidade perdida *')).toBeInTheDocument()
-    expect(screen.getByText('Idade aproximada da regressão (meses) *')).toBeInTheDocument()
-  })
-
-  it('should show physiotherapy details when hadPhysiotherapy is sim', () => {
-    const { container } = render(<Wrapper />)
-
-    const select = container.querySelector(
-      'select[name="motorDevelopment.physiotherapy.hadPhysiotherapy"]',
-    )
-    fireEvent.change(select!, { target: { value: 'sim' } })
-
-    expect(screen.getByText('Motivo do acompanhamento *')).toBeInTheDocument()
-    expect(screen.getByText('Período aproximado *')).toBeInTheDocument()
-    expect(screen.getByText('Resultado ou evolução relatada')).toBeInTheDocument()
-  })
-
-  it('should show frequent falls warning when frequentFalls is sim', () => {
-    const { container } = render(<Wrapper />)
-
-    const select = container.querySelector('select[name="motorDevelopment.general.frequentFalls"]')
-    fireEvent.change(select!, { target: { value: 'sim' } })
-
-    expect(screen.getByText(/Quedas recorrentes devem ser analisadas/)).toBeInTheDocument()
-    expect(screen.getByText('Descrição (Frequência, contexto, consequências)')).toBeInTheDocument()
-  })
 })

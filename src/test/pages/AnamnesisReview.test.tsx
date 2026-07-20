@@ -242,7 +242,7 @@ describe('AnamnesisReview', () => {
     })
   })
 
-  it('deve garantir que o total de seções da revisão seja igual a 7 (excluindo placeholders)', async () => {
+  it('deve considerar somente as 8 seções clínicas ativas', async () => {
     ;(validation.validateSection as any).mockReturnValue({
       isValid: true,
       errors: [],
@@ -252,8 +252,12 @@ describe('AnamnesisReview', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText((_, element) => element?.textContent === 'Seções Concluídas: 7 de 7'),
+        screen.getByText((_, element) => element?.textContent === 'Seções Concluídas: 8 de 8'),
       ).toBeInTheDocument()
+      expect(screen.getByText('Desenvolvimento da Linguagem')).toBeInTheDocument()
+      expect(screen.queryByText('Comunicação Visual')).not.toBeInTheDocument()
+      expect(screen.queryByText('Linguagem Receptiva e Expressiva')).not.toBeInTheDocument()
+      expect(screen.queryByText('Fala e Articulação')).not.toBeInTheDocument()
     })
   })
 })

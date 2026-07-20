@@ -19,7 +19,7 @@ describe('Communication Development Schemas', () => {
     expect(result.success).toBe(true)
   })
 
-  it('rejeita idade negativa em vocalizações e primeiras palavras', () => {
+  it('rejeita idade negativa em vocalizações e ignora bloco legado de primeiras palavras', () => {
     const dataVocalization = { vocalizationHistory: { earlyVocalizationsAge: -1 } }
     const resultVocalization = communicationDevelopmentSchema.safeParse(dataVocalization)
     expect(resultVocalization.success).toBe(false)
@@ -30,7 +30,7 @@ describe('Communication Development Schemas', () => {
 
     const dataWords = { earlyLanguageDevelopment: { firstWordsAge: -5 } }
     const resultWords = communicationDevelopmentSchema.safeParse(dataWords)
-    expect(resultWords.success).toBe(false)
+    expect(resultWords.success).toBe(true)
   })
 
   it('exige descrição e idade quando há regressão nas vocalizações', () => {
@@ -46,41 +46,28 @@ describe('Communication Development Schemas', () => {
     }
   })
 
-  it('exige habilidade e idade quando há perda de habilidades na regressão geral', () => {
+  it('não aplica validação obrigatória ao bloco legado de regressão geral', () => {
     const data = {
       communicationRegression: { hadLoss: 'sim' as const },
     }
     const result = communicationDevelopmentSchema.safeParse(data)
-    expect(result.success).toBe(false)
-    if (!result.success) {
-      const issuePaths = result.error.issues.map((i) => i.path.join('.'))
-      expect(issuePaths).toContain('communicationRegression.lostSkill')
-      expect(issuePaths).toContain('communicationRegression.regressionAge')
-    }
+    expect(result.success).toBe(true)
   })
 
-  it('exige descrição quando modo de início da regressão é outro', () => {
+  it('não aplica validação ao modo de início da regressão legada', () => {
     const data = {
       communicationRegression: { onsetMode: 'outro' as const },
     }
     const result = communicationDevelopmentSchema.safeParse(data)
-    expect(result.success).toBe(false)
-    if (!result.success) {
-      const issuePaths = result.error.issues.map((i) => i.path.join('.'))
-      expect(issuePaths).toContain('communicationRegression.onsetModeOtherDescription')
-    }
+    expect(result.success).toBe(true)
   })
 
-  it('exige tipo de recurso quando utiliza comunicação alternativa', () => {
+  it('não aplica validação obrigatória à comunicação alternativa legada', () => {
     const data = {
       alternativeCommunication: { usesResource: 'sim' as const },
     }
     const result = communicationDevelopmentSchema.safeParse(data)
-    expect(result.success).toBe(false)
-    if (!result.success) {
-      const issuePaths = result.error.issues.map((i) => i.path.join('.'))
-      expect(issuePaths).toContain('alternativeCommunication.resourceType')
-    }
+    expect(result.success).toBe(true)
   })
 
   it('exige descrição quando modo de comunicação inclui "outro"', () => {
@@ -95,16 +82,12 @@ describe('Communication Development Schemas', () => {
     }
   })
 
-  it('exige observação se o vocabulário produzido passar de 3000 palavras', () => {
+  it('não aplica validação ao vocabulário do bloco legado de primeiras palavras', () => {
     const data = {
       earlyLanguageDevelopment: { estimatedProducedWords: 3001 },
     }
     const result = communicationDevelopmentSchema.safeParse(data)
-    expect(result.success).toBe(false)
-    if (!result.success) {
-      const issuePaths = result.error.issues.map((i) => i.path.join('.'))
-      expect(issuePaths).toContain('earlyLanguageDevelopment.observations')
-    }
+    expect(result.success).toBe(true)
   })
 
   it('validação estrita passa com dados completos e corretos', () => {

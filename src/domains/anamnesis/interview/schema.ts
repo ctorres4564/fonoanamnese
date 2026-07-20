@@ -36,8 +36,23 @@ export const interviewDataSchema = z
     modality: z.enum(['presencial', 'domiciliar', 'remoto', 'híbrido', 'outro']).optional(),
     modalityAddress: z.string().optional(),
     modalityPlatform: z.string().optional(),
+    diagnosticStatus: z
+      .enum(['not_informed', 'under_investigation', 'established'])
+      .optional(),
+    diagnosis: z.string().optional(),
+    diagnosisCid: z.string().optional(),
+    diagnosisDate: z.string().optional(),
+    diagnosisResponsible: z.string().optional(),
+    diagnosisObservations: z.string().optional(),
   })
   .superRefine((data, ctx) => {
+    if (data.diagnosticStatus === 'established' && !data.diagnosis?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Informe o diagnóstico estabelecido',
+        path: ['diagnosis'],
+      })
+    }
     if (data.startTime && data.endTime) {
       if (data.endTime < data.startTime) {
         ctx.addIssue({

@@ -1,7 +1,7 @@
 import type { ActualAnamnesisSection } from '../..'
 
 interface SectionNavigationProps {
-  sections: { id: ActualAnamnesisSection | string; label: string }[]
+  sections: readonly { id: ActualAnamnesisSection | string; label: string }[]
   currentSection: ActualAnamnesisSection | string
   completedSections: string[]
   onSelectSection: (section: any) => void

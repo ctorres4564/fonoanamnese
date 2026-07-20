@@ -56,11 +56,9 @@ describe('Header Component', () => {
     )
     const button = screen.getByRole('button', { name: /toggle dark mode/i })
 
-
     // Clicking should toggle it to light mode since it started as dark
     fireEvent.click(button)
     expect(document.documentElement.classList.contains('dark')).toBe(false)
     expect(localStorage.getItem('theme')).toBe('light')
   })
 })
-

@@ -100,9 +100,12 @@ export interface CommunicationRegression {
 export interface CommunicationDevelopmentSection {
   preLinguisticCommunication?: PreLinguisticCommunication
   vocalizationHistory?: VocalizationHistory
+  /** @deprecated Preservado somente para registros históricos. */
   earlyLanguageDevelopment?: EarlyLanguageDevelopment
   communicationModes?: CommunicationMode[]
   communicationModeOtherDescription?: string
+  /** @deprecated Preservado somente para registros históricos. */
   alternativeCommunication?: AlternativeCommunicationHistory
+  /** @deprecated Preservado somente para registros históricos. */
   communicationRegression?: CommunicationRegression
 }

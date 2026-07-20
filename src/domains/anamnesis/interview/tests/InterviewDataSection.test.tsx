@@ -44,4 +44,43 @@ describe('InterviewDataSection Component', () => {
       )
     })
   })
+
+  it('permite registrar ausência de diagnóstico e investigação sem exigir diagnóstico ou CID', async () => {
+    const handleChange = vi.fn()
+    const user = userEvent.setup()
+    render(<InterviewDataSection onChange={handleChange} />)
+
+    expect(screen.getByRole('option', { name: 'Sem diagnóstico informado' })).toBeInTheDocument()
+    await user.selectOptions(screen.getByLabelText('Situação diagnóstica'), 'under_investigation')
+    expect(screen.queryByLabelText('Diagnóstico *')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/CID/)).not.toBeInTheDocument()
+  })
+
+  it('exibe e permite editar os campos de diagnóstico estabelecido com CID opcional', async () => {
+    const handleChange = vi.fn()
+    const user = userEvent.setup()
+    render(
+      <InterviewDataSection
+        initialData={{
+          diagnosticStatus: 'established',
+          diagnosis: 'Diagnóstico informado pela família',
+        }}
+        onChange={handleChange}
+      />,
+    )
+
+    const diagnosis = screen.getByLabelText('Diagnóstico *')
+    expect(diagnosis).toHaveValue('Diagnóstico informado pela família')
+    expect(screen.getByLabelText('CID (opcional)')).toHaveValue('')
+    await user.clear(diagnosis)
+    await user.type(diagnosis, 'Diagnóstico atualizado')
+    await user.type(screen.getByLabelText('CID (opcional)'), 'F00.0')
+
+    await waitFor(() => {
+      expect(handleChange).toHaveBeenCalledWith(
+        expect.objectContaining({ diagnosis: 'Diagnóstico atualizado', diagnosisCid: 'F00.0' }),
+        expect.any(Boolean),
+      )
+    })
+  })
 })

@@ -25,6 +25,7 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
   const location = watch('location')
   const informationQuality = watch('informationQuality')
   const modality = watch('modality')
+  const diagnosticStatus = watch('diagnosticStatus')
 
   // Trigger onChange when form values change
   useEffect(() => {
@@ -39,6 +40,52 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
   return (
     <div className="space-y-6 max-w-4xl">
       <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Dados da Entrevista</h2>
+
+      <fieldset className="space-y-4 rounded-lg border border-gray-200 p-4">
+        <legend className="px-1 text-base font-semibold text-gray-800">Situação diagnóstica</legend>
+        <div>
+          <label htmlFor="diagnosticStatus" className="block text-sm font-medium text-gray-700">
+            Situação diagnóstica
+          </label>
+          <select
+            id="diagnosticStatus"
+            {...register('diagnosticStatus')}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          >
+            <option value="not_informed">Sem diagnóstico informado</option>
+            <option value="under_investigation">Em investigação diagnóstica</option>
+            <option value="established">Diagnóstico estabelecido</option>
+          </select>
+        </div>
+
+        {diagnosticStatus === 'established' && (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="md:col-span-2">
+              <label htmlFor="diagnosis" className="block text-sm font-medium text-gray-700">
+                Diagnóstico *
+              </label>
+              <input id="diagnosis" type="text" {...register('diagnosis')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+              {errors.diagnosis && <p className="mt-1 text-sm text-red-600">{errors.diagnosis.message}</p>}
+            </div>
+            <div>
+              <label htmlFor="diagnosisCid" className="block text-sm font-medium text-gray-700">CID (opcional)</label>
+              <input id="diagnosisCid" type="text" {...register('diagnosisCid')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            </div>
+            <div>
+              <label htmlFor="diagnosisDate" className="block text-sm font-medium text-gray-700">Data do diagnóstico (opcional)</label>
+              <input id="diagnosisDate" type="date" {...register('diagnosisDate')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            </div>
+            <div className="md:col-span-2">
+              <label htmlFor="diagnosisResponsible" className="block text-sm font-medium text-gray-700">Profissional ou serviço responsável (opcional)</label>
+              <input id="diagnosisResponsible" type="text" {...register('diagnosisResponsible')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            </div>
+            <div className="md:col-span-2">
+              <label htmlFor="diagnosisObservations" className="block text-sm font-medium text-gray-700">Observações do diagnóstico (opcional)</label>
+              <textarea id="diagnosisObservations" {...register('diagnosisObservations')} rows={3} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+            </div>
+          </div>
+        )}
+      </fieldset>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
