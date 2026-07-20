@@ -36,9 +36,7 @@ export const interviewDataSchema = z
     modality: z.enum(['presencial', 'domiciliar', 'remoto', 'híbrido', 'outro']).optional(),
     modalityAddress: z.string().optional(),
     modalityPlatform: z.string().optional(),
-    diagnosticStatus: z
-      .enum(['not_informed', 'under_investigation', 'established'])
-      .optional(),
+    diagnosticStatus: z.enum(['not_informed', 'under_investigation', 'established']).optional(),
     diagnosis: z.string().optional(),
     diagnosisCid: z.string().optional(),
     diagnosisDate: z.string().optional(),

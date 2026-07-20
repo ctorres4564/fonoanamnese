@@ -18,6 +18,7 @@
 ## Simplificações adicionais
 
 Em Desenvolvimento Motor foram retirados do fluxo ativo Equilíbrio e Coordenação Global, Regressão, Histórico Terapêutico e Condições Gerais. Coordenação Motora Fina permanece. Em Desenvolvimento da Linguagem foram retirados Primeiras Palavras e Frases, Comunicação Suplementar ou Alternativa e Regressão Comunicativa Geral. Os campos antigos continuam preservados nos objetos históricos.
+
 - Linguagem Receptiva e Expressiva: chave legada `sections.languageDevelopment`.
 - Fala e Articulação: chave legada `sections.speechDevelopment`.
 

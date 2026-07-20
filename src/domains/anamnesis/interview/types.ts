@@ -15,10 +15,7 @@ export interface InterviewData {
   modality?: 'presencial' | 'domiciliar' | 'remoto' | 'híbrido' | 'outro'
   modalityAddress?: string
   modalityPlatform?: string
-  diagnosticStatus?:
-    | 'not_informed'
-    | 'under_investigation'
-    | 'established'
+  diagnosticStatus?: 'not_informed' | 'under_investigation' | 'established'
   diagnosis?: string
   diagnosisCid?: string
   diagnosisDate?: string

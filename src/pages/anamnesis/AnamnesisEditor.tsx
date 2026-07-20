@@ -49,8 +49,8 @@ export default function AnamnesisEditor() {
           if (!isActiveAnamnesisSection(data.currentSection)) {
             data.currentSection = 'interviewData'
           }
-          const completedSections = ACTIVE_ANAMNESIS_SECTION_IDS.filter((sectionId) =>
-            validateSection(sectionId, data.sections?.[sectionId]).isValid,
+          const completedSections = ACTIVE_ANAMNESIS_SECTION_IDS.filter(
+            (sectionId) => validateSection(sectionId, data.sections?.[sectionId]).isValid,
           )
           data.completedSections = completedSections
           data.completionPercentage = Math.round(
@@ -240,13 +240,22 @@ export default function AnamnesisEditor() {
             />
           )}
           {anamnesis.currentSection === 'healthHistory' && (
-            <HealthHistorySection initialData={anamnesis.sections?.healthHistory} onChange={handleSectionDataChange} />
+            <HealthHistorySection
+              initialData={anamnesis.sections?.healthHistory}
+              onChange={handleSectionDataChange}
+            />
           )}
           {anamnesis.currentSection === 'familyHistory' && (
-            <FamilyHistorySection initialData={anamnesis.sections?.familyHistory} onChange={handleSectionDataChange} />
+            <FamilyHistorySection
+              initialData={anamnesis.sections?.familyHistory}
+              onChange={handleSectionDataChange}
+            />
           )}
           {anamnesis.currentSection === 'childRoutine' && (
-            <ChildRoutineSection initialData={anamnesis.sections?.childRoutine} onChange={handleSectionDataChange} />
+            <ChildRoutineSection
+              initialData={anamnesis.sections?.childRoutine}
+              onChange={handleSectionDataChange}
+            />
           )}
         </SectionContainer>
       </AnamnesisWizard>

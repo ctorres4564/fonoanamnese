@@ -10,7 +10,9 @@ describe('CommunicationDevelopmentSection', () => {
     expect(screen.getByText('2. Vocalizações e Balbucio')).toBeInTheDocument()
     expect(screen.getByText('3. Modos de Comunicação Utilizados')).toBeInTheDocument()
     expect(screen.queryByText('3. Primeiras Palavras e Frases')).not.toBeInTheDocument()
-    expect(screen.queryByText('5. Comunicação Suplementar ou Alternativa (CSA)')).not.toBeInTheDocument()
+    expect(
+      screen.queryByText('5. Comunicação Suplementar ou Alternativa (CSA)'),
+    ).not.toBeInTheDocument()
     expect(screen.queryByText('6. Regressão Comunicativa Geral')).not.toBeInTheDocument()
   })
 
@@ -26,7 +28,6 @@ describe('CommunicationDevelopmentSection', () => {
     expect(screen.getByText('Descrição da perda *')).toBeInTheDocument()
   })
 
-
   it('exibe descrição para outro modo de comunicação', () => {
     const { container } = render(<CommunicationDevelopmentSection onChange={vi.fn()} />)
 
@@ -35,5 +36,4 @@ describe('CommunicationDevelopmentSection', () => {
 
     expect(screen.getByText('Descrição para outro modo de comunicação *')).toBeInTheDocument()
   })
-
 })

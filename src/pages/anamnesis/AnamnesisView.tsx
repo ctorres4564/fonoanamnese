@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getAnamnesisById } from '../../services/anamnesisService'
 import { getPatientById } from '../../services/patientService'
-import { ACTIVE_ANAMNESIS_SECTIONS, type Anamnesis, type ActualAnamnesisSection } from '../../domains/anamnesis'
+import {
+  ACTIVE_ANAMNESIS_SECTIONS,
+  type Anamnesis,
+  type ActualAnamnesisSection,
+} from '../../domains/anamnesis'
 import type { Patient } from '../../types'
 import { useAuth } from '../../contexts/AuthContext'
 import { ChevronDown, ChevronUp, Lock } from 'lucide-react'

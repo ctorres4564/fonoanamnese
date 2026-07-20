@@ -151,7 +151,9 @@ describe('AnamnesisEditor Integration', () => {
   it('exibe Desenvolvimento da Linguagem e as novas etapas', async () => {
     renderEditor()
 
-    await waitFor(() => expect(screen.getByText('Desenvolvimento da Linguagem')).toBeInTheDocument())
+    await waitFor(() =>
+      expect(screen.getByText('Desenvolvimento da Linguagem')).toBeInTheDocument(),
+    )
     expect(screen.getByText('Histórico de Saúde')).toBeInTheDocument()
     expect(screen.getByText('Histórico Familiar')).toBeInTheDocument()
     expect(screen.getByText('Rotina da Criança')).toBeInTheDocument()
@@ -171,7 +173,9 @@ describe('AnamnesisEditor Integration', () => {
       },
     })
     renderEditor()
-    await waitFor(() => expect(screen.getAllByText('Dados da Entrevista').length).toBeGreaterThan(0))
+    await waitFor(() =>
+      expect(screen.getAllByText('Dados da Entrevista').length).toBeGreaterThan(0),
+    )
 
     fireEvent.click(screen.getByText('Salvar Agora'))
     await waitFor(() => expect(anamnesisService.updateAnamnesis).toHaveBeenCalled())

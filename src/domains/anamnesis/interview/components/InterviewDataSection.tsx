@@ -64,24 +64,65 @@ export function InterviewDataSection({ initialData, onChange }: InterviewDataSec
               <label htmlFor="diagnosis" className="block text-sm font-medium text-gray-700">
                 Diagnóstico *
               </label>
-              <input id="diagnosis" type="text" {...register('diagnosis')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-              {errors.diagnosis && <p className="mt-1 text-sm text-red-600">{errors.diagnosis.message}</p>}
+              <input
+                id="diagnosis"
+                type="text"
+                {...register('diagnosis')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              />
+              {errors.diagnosis && (
+                <p className="mt-1 text-sm text-red-600">{errors.diagnosis.message}</p>
+              )}
             </div>
             <div>
-              <label htmlFor="diagnosisCid" className="block text-sm font-medium text-gray-700">CID (opcional)</label>
-              <input id="diagnosisCid" type="text" {...register('diagnosisCid')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+              <label htmlFor="diagnosisCid" className="block text-sm font-medium text-gray-700">
+                CID (opcional)
+              </label>
+              <input
+                id="diagnosisCid"
+                type="text"
+                {...register('diagnosisCid')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              />
             </div>
             <div>
-              <label htmlFor="diagnosisDate" className="block text-sm font-medium text-gray-700">Data do diagnóstico (opcional)</label>
-              <input id="diagnosisDate" type="date" {...register('diagnosisDate')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+              <label htmlFor="diagnosisDate" className="block text-sm font-medium text-gray-700">
+                Data do diagnóstico (opcional)
+              </label>
+              <input
+                id="diagnosisDate"
+                type="date"
+                {...register('diagnosisDate')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              />
             </div>
             <div className="md:col-span-2">
-              <label htmlFor="diagnosisResponsible" className="block text-sm font-medium text-gray-700">Profissional ou serviço responsável (opcional)</label>
-              <input id="diagnosisResponsible" type="text" {...register('diagnosisResponsible')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+              <label
+                htmlFor="diagnosisResponsible"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Profissional ou serviço responsável (opcional)
+              </label>
+              <input
+                id="diagnosisResponsible"
+                type="text"
+                {...register('diagnosisResponsible')}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              />
             </div>
             <div className="md:col-span-2">
-              <label htmlFor="diagnosisObservations" className="block text-sm font-medium text-gray-700">Observações do diagnóstico (opcional)</label>
-              <textarea id="diagnosisObservations" {...register('diagnosisObservations')} rows={3} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+              <label
+                htmlFor="diagnosisObservations"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Observações do diagnóstico (opcional)
+              </label>
+              <textarea
+                id="diagnosisObservations"
+                {...register('diagnosisObservations')}
+                rows={3}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              />
             </div>
           </div>
         )}

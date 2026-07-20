@@ -17,7 +17,11 @@ export function MotorDevelopmentSection({ initialData, onChange }: MotorDevelopm
     defaultValues: { motorDevelopment: initialData || ({} as MotorSectionType) },
     mode: 'onChange',
   })
-  const { watch, getValues, formState: { isValid } } = methods
+  const {
+    watch,
+    getValues,
+    formState: { isValid },
+  } = methods
 
   useEffect(() => {
     const subscription = watch(() => onChange(getValues().motorDevelopment, isValid))

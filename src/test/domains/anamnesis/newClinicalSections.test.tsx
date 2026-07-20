@@ -7,7 +7,9 @@ import { ChildRoutineSection } from '../../../domains/anamnesis/routine/componen
 describe('novas seções clínicas', () => {
   it('renderiza Histórico de Saúde com os três grupos solicitados', () => {
     render(<HealthHistorySection onChange={vi.fn()} />)
-    expect(screen.getByText('Doenças prévias, internações e uso anterior de medicações')).toBeInTheDocument()
+    expect(
+      screen.getByText('Doenças prévias, internações e uso anterior de medicações'),
+    ).toBeInTheDocument()
     expect(screen.getByText('Histórico de cirurgias, traumas ou acidentes')).toBeInTheDocument()
     expect(screen.getByText('Uso de medicações atuais')).toBeInTheDocument()
   })
@@ -23,6 +25,8 @@ describe('novas seções clínicas', () => {
     expect(screen.getByText('Frequenta escola?')).toBeInTheDocument()
     expect(screen.getByText('Desempenho escolar')).toBeInTheDocument()
     expect(screen.getByText('Socialização')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('O responsável quer informar algo que não foi perguntado?')).toBeInTheDocument()
+    expect(
+      screen.getByPlaceholderText('O responsável quer informar algo que não foi perguntado?'),
+    ).toBeInTheDocument()
   })
 })

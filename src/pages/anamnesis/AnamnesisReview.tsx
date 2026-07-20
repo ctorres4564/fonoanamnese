@@ -6,7 +6,11 @@ import {
   finalizeAnamnesis,
 } from '../../services/anamnesisService'
 import { getPatientById } from '../../services/patientService'
-import { ACTIVE_ANAMNESIS_SECTIONS, type Anamnesis, type ActualAnamnesisSection } from '../../domains/anamnesis'
+import {
+  ACTIVE_ANAMNESIS_SECTIONS,
+  type Anamnesis,
+  type ActualAnamnesisSection,
+} from '../../domains/anamnesis'
 import type { Patient } from '../../types'
 import { useAuth } from '../../contexts/AuthContext'
 import { validateSection } from '../../utils/validation'

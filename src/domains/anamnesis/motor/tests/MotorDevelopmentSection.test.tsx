@@ -34,5 +34,4 @@ describe('MotorDevelopmentSection', () => {
     expect(screen.getByText('Idade aproximada (descrição)')).toBeInTheDocument()
     expect(screen.getByText('Modo de aquisição')).toBeInTheDocument()
   })
-
 })

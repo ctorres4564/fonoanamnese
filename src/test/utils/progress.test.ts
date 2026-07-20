@@ -10,13 +10,23 @@ describe('calculateAnamnesisProgress', () => {
   ] as const
 
   it('should add section to completed and calculate correct percentage', () => {
-    const result = calculateAnamnesisProgress(['interviewData'], 'chiefComplaint', true, activeSections)
+    const result = calculateAnamnesisProgress(
+      ['interviewData'],
+      'chiefComplaint',
+      true,
+      activeSections,
+    )
     expect(result.newCompleted).toEqual(['interviewData', 'chiefComplaint'])
     expect(result.completionPercentage).toBe(50) // 2 out of 4 is 50%
   })
 
   it('should not add duplicate section', () => {
-    const result = calculateAnamnesisProgress(['interviewData'], 'interviewData', true, activeSections)
+    const result = calculateAnamnesisProgress(
+      ['interviewData'],
+      'interviewData',
+      true,
+      activeSections,
+    )
     expect(result.newCompleted).toEqual(['interviewData'])
     expect(result.completionPercentage).toBe(25)
   })
