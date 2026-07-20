@@ -1,4 +1,5 @@
 export interface InterviewData {
+  patientName?: string
   interviewDate: string // YYYY-MM-DD
   startTime?: string // HH:mm
   endTime?: string // HH:mm

@@ -5,6 +5,7 @@ today.setHours(0, 0, 0, 0)
 
 export const interviewDataSchema = z
   .object({
+    patientName: z.string().optional(),
     interviewDate: z
       .string()
       .min(1, 'A data é obrigatória')

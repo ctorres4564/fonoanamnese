@@ -9,6 +9,7 @@ describe('InterviewDataSection Component', () => {
     render(<InterviewDataSection onChange={handleChange} />)
 
     expect(screen.getByText('Dados da Entrevista')).toBeInTheDocument()
+    expect(screen.getByLabelText('Nome do paciente')).toBeInTheDocument()
     expect(screen.getByText(/Data da Entrevista/)).toBeInTheDocument()
     expect(screen.getByText(/Entrevistado/)).toBeInTheDocument()
     expect(screen.getByText(/Vínculo/)).toBeInTheDocument()
